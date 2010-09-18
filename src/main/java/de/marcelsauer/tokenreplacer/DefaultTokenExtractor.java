@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang.Validate;
-
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
  * de>
@@ -35,7 +33,7 @@ public class DefaultTokenExtractor implements TokenExtractor {
 	private String amountEnd = Constants.DEFAULT_AMOUNT_END;
 
 	@Override
-	public Map<String, Match> extract(String input) {
+	public Map<String, Match> extract(final String input) {
 		Validate.notEmpty(input);
 		final Map<String, Match> matches = new HashMap<String, Match>();
 		checkState();
@@ -80,7 +78,7 @@ public class DefaultTokenExtractor implements TokenExtractor {
 	 * @return
 	 * @todo seems like duplicated logic here, refactor
 	 */
-	private Match extractMatch(String match) {
+	private Match extractMatch(final String match) {
 		String tokenWithoutAmount = "";
 		int amount = 1;
 		final StringTokenizer st = new StringTokenizer(match, amountStart);
@@ -101,7 +99,7 @@ public class DefaultTokenExtractor implements TokenExtractor {
 		return new Match(match, tokenWithoutAmount, amount);
 	}
 
-	protected void reportMatch(Map<String, Match> matches, String match) {
+	protected void reportMatch(final Map<String, Match> matches, final String match) {
 		final Match extractedMatch = extractMatch(match);
 		if (matches.containsKey(extractedMatch.match)) {
 			matches.put(extractedMatch.match, extractedMatch);
@@ -111,28 +109,28 @@ public class DefaultTokenExtractor implements TokenExtractor {
 	}
 
 	@Override
-	public TokenExtractor withTokenEnd(String tokenEnd) {
+	public TokenExtractor withTokenEnd(final String tokenEnd) {
 		Validate.notEmpty(tokenEnd);
 		this.tokenEnd = tokenEnd;
 		return this;
 	}
 
 	@Override
-	public TokenExtractor withTokenStart(String tokenStart) {
+	public TokenExtractor withTokenStart(final String tokenStart) {
 		Validate.notEmpty(tokenStart);
 		this.tokenStart = tokenStart;
 		return this;
 	}
 
 	@Override
-	public TokenExtractor withAmountStart(String amountStart) {
+	public TokenExtractor withAmountStart(final String amountStart) {
 		Validate.notEmpty(amountStart);
 		this.amountStart = amountStart;
 		return this;
 	}
 
 	@Override
-	public TokenExtractor withAmountEnd(String amountEnd) {
+	public TokenExtractor withAmountEnd(final String amountEnd) {
 		Validate.notEmpty(amountEnd);
 		this.amountEnd = amountEnd;
 		return this;

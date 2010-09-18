@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.Validate;
-
 import de.marcelsauer.tokenreplacer.TokenExtractor.Match;
 
 /**
@@ -41,7 +39,7 @@ public class TokenReplacer {
 	 * 
 	 * @param extractor
 	 */
-	public TokenReplacer(TokenExtractor extractor) {
+	public TokenReplacer(final TokenExtractor extractor) {
 		Validate.notNull(extractor);
 		this.extractor = extractor;
 	}
@@ -75,7 +73,7 @@ public class TokenReplacer {
 		return toSubstitute;
 	}
 
-	private String getReplacement(Match match, Generator generator) {
+	private String getReplacement(final Match match, final Generator generator) {
 		final String value = generator.generate();
 
 		final StringBuffer replacement = new StringBuffer("");
@@ -89,7 +87,7 @@ public class TokenReplacer {
 		return replacement.toString();
 	}
 
-	private void check(Generator generator, String token) {
+	private void check(final Generator generator, final String token) {
 		if (generator == null) {
 			throw new IllegalStateException(String.format("no generator for key '%s' found", token));
 		}
@@ -100,7 +98,7 @@ public class TokenReplacer {
 	 *            to use for a specific token
 	 * @return
 	 */
-	public TokenReplacer register(Generator generator) {
+	public TokenReplacer register(final Generator generator) {
 		Validate.notNull(generator);
 		this.generators.put(generator.forToken(), generator);
 		return this;
@@ -112,7 +110,7 @@ public class TokenReplacer {
 	 *            start token
 	 * @return the {@link TokenReplacer} to allow method chaining
 	 */
-	public TokenReplacer withTokenStart(String tokenStart) {
+	public TokenReplacer withTokenStart(final String tokenStart) {
 		Validate.notEmpty(tokenStart);
 		this.tokenStart = tokenStart;
 		this.extractor.withTokenStart(tokenStart);
@@ -125,7 +123,7 @@ public class TokenReplacer {
 	 *            token
 	 * @return the {@link TokenReplacer} to allow method chaining
 	 */
-	public TokenReplacer withTokenEnd(String tokenEnd) {
+	public TokenReplacer withTokenEnd(final String tokenEnd) {
 		Validate.notEmpty(tokenEnd);
 		this.tokenEnd = tokenEnd;
 		this.extractor.withTokenEnd(tokenEnd);
@@ -138,7 +136,7 @@ public class TokenReplacer {
 	 *            ${date[2]} -> [ would be the start
 	 * @return the {@link TokenReplacer} to allow method chaining
 	 */
-	public TokenReplacer withAmountStart(String amountStart) {
+	public TokenReplacer withAmountStart(final String amountStart) {
 		Validate.notEmpty(amountStart);
 		this.extractor.withAmountStart(amountStart);
 		return this;
@@ -150,7 +148,7 @@ public class TokenReplacer {
 	 *            ${date[2]} -> ] would be the start
 	 * @return the {@link TokenReplacer} to allow method chaining
 	 */
-	public TokenReplacer withAmountEnd(String amountEnd) {
+	public TokenReplacer withAmountEnd(final String amountEnd) {
 		Validate.notEmpty(amountEnd);
 		this.extractor.withAmountEnd(amountEnd);
 		return this;
