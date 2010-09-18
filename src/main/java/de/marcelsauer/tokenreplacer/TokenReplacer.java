@@ -106,6 +106,12 @@ public class TokenReplacer {
 		return this;
 	}
 
+	/**
+	 * @param tokenStart
+	 *            the start to identify a token e.g. ${date} -> ${ would be the
+	 *            start token
+	 * @return the {@link TokenReplacer} to allow method chaining
+	 */
 	public TokenReplacer withTokenStart(String tokenStart) {
 		Validate.notEmpty(tokenStart);
 		this.tokenStart = tokenStart;
@@ -113,6 +119,12 @@ public class TokenReplacer {
 		return this;
 	}
 
+	/**
+	 * @param tokenEnd
+	 *            the end to identify a token e.g. ${date} -> } would be the end
+	 *            token
+	 * @return the {@link TokenReplacer} to allow method chaining
+	 */
 	public TokenReplacer withTokenEnd(String tokenEnd) {
 		Validate.notEmpty(tokenEnd);
 		this.tokenEnd = tokenEnd;
@@ -120,15 +132,54 @@ public class TokenReplacer {
 		return this;
 	}
 
+	/**
+	 * @param amountStart
+	 *            the start to identify the amount part of the token e.g.
+	 *            ${date[2]} -> [ would be the start
+	 * @return the {@link TokenReplacer} to allow method chaining
+	 */
 	public TokenReplacer withAmountStart(String amountStart) {
 		Validate.notEmpty(amountStart);
 		this.extractor.withAmountStart(amountStart);
 		return this;
 	}
 
+	/**
+	 * @param amountEnd
+	 *            the end to identify the amount part of the token e.g.
+	 *            ${date[2]} -> ] would be the start
+	 * @return the {@link TokenReplacer} to allow method chaining
+	 */
 	public TokenReplacer withAmountEnd(String amountEnd) {
 		Validate.notEmpty(amountEnd);
 		this.extractor.withAmountEnd(amountEnd);
+		return this;
+	}
+
+	/**
+	 * registers a static value for a given token. if you need dynamic behaviour
+	 * then use {@link #register(Generator)}
+	 * 
+	 * @param token
+	 *            the name of the token to be replaced e.g. for ${date} ->
+	 *            "date"
+	 * @param value
+	 *            the static value that will be used when replacing the token
+	 * @return the {@link TokenReplacer} to allow method chaining
+	 */
+	public TokenReplacer register(final String token, final String value) {
+		this.register(new Generator() {
+
+			@Override
+			public String generate() {
+				return value;
+			}
+
+			@Override
+			public String forToken() {
+				return token;
+			}
+		});
 		return this;
 	}
 

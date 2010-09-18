@@ -46,8 +46,7 @@ public class TokenReplacerTest {
 	public void thatDefaultPatternWorks() {
 		replacer.register(new NumberGenerator());
 
-		Map<String, Match> matches = new HashMap<String, Match>();
-		matches.put("random", new Match("random", "random"));
+		Map<String, Match> matches = newMatch("random");
 
 		Mockito.when(extractor.extract("${random}")).thenReturn(matches);
 		assertEquals("1234", replacer.substitute("${random}"));
@@ -65,17 +64,33 @@ public class TokenReplacerTest {
 		replacer.withTokenStart("[");
 		replacer.withTokenEnd("]");
 
-		Map<String, Match> matches = new HashMap<String, Match>();
-		matches.put("random", new Match("random", "random"));
+		Map<String, Match> matches = newMatch("random");
 
 		Mockito.when(extractor.extract("[random]")).thenReturn(matches);
 		assertEquals("1234", replacer.substitute("[random]"));
 	}
 
 	@Test
-	public void throwsIllegalStateExceptionIfNoGeneratorIsFound() {
+	public void thatStaticStringsWork() {
+		replacer.register("aStaticString", "the content");
+
+		Map<String, Match> matches = newMatch("aStaticString");
+
+		Mockito.when(extractor.extract("${aStaticString}")).thenReturn(matches);
+
+		assertEquals("the content", replacer.substitute("${aStaticString}"));
+	}
+
+	private Map<String, Match> newMatch(String tokenWithAmount) {
 		Map<String, Match> matches = new HashMap<String, Match>();
-		matches.put("random", new Match("random", "random"));
+		matches.put(tokenWithAmount, new Match(tokenWithAmount, tokenWithAmount));
+		return matches;
+	}
+
+	@Test
+	public void throwsIllegalStateExceptionIfNoGeneratorIsFound() {
+		Map<String, Match> matches = newMatch("random");
+
 		Mockito.when(extractor.extract("${random}")).thenReturn(matches);
 		try {
 			replacer.substitute("${random}");
