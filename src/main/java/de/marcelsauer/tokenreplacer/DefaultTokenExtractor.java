@@ -49,7 +49,7 @@ public class DefaultTokenExtractor implements TokenExtractor {
 							throw new IllegalArgumentException("empty tokens are not supported, error string was: "
 									+ input);
 						}
-						reportMatch(matches, match);
+						reportMatch(matches, match, tokenStart, tokenEnd);
 					}
 				}
 			}
@@ -74,12 +74,11 @@ public class DefaultTokenExtractor implements TokenExtractor {
 	}
 
 	/**
-	 * @param match
-	 * @return
 	 * @todo seems like duplicated logic here, refactor
 	 */
-	private Match extractMatch(final String match) {
-		String tokenWithoutAmount = "";
+	private Match extractMatch(final String match, String tokenStart, String tokenEnd) {
+		String fullToken = "";
+		String token = "";
 		int amount = 1;
 		final StringTokenizer st = new StringTokenizer(match, amountStart);
 		while (st.hasMoreTokens()) {
@@ -90,17 +89,19 @@ public class DefaultTokenExtractor implements TokenExtractor {
 					final String amountMatch = en.nextToken();
 					if (amountMatch != null && !"".equals(amountMatch.trim())) {
 						amount = Integer.valueOf(amountMatch);
+						fullToken = tokenStart + match + tokenEnd;
 					}
 				}
 			} else {
-				tokenWithoutAmount = nextToken;
+				token = nextToken; 
+				fullToken = tokenStart + match + tokenEnd;
 			}
 		}
-		return new Match(match, tokenWithoutAmount, amount);
+		return new Match(token, match, fullToken, amount);
 	}
 
-	protected void reportMatch(final Map<String, Match> matches, final String match) {
-		final Match extractedMatch = extractMatch(match);
+	protected void reportMatch(final Map<String, Match> matches, final String match, String tokenStart, String tokenEnd) {
+		final Match extractedMatch = extractMatch(match, tokenStart, tokenEnd);
 		if (matches.containsKey(extractedMatch.match)) {
 			matches.put(extractedMatch.match, extractedMatch);
 		} else {

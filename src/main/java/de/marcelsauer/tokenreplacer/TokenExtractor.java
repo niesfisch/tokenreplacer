@@ -68,29 +68,41 @@ public interface TokenExtractor {
 		public final String match;
 
 		/**
-		 * e.g. random
+		 * e.g. ${random[1]}
 		 */
-		public final String tokenWithoutAmount;
+		public final String fullToken;
 
 		/**
 		 * e.g. 1
 		 */
 		public final int amount;
 
-		protected Match(String match, String tokenWithoutAmount, int amount) {
+		/**
+		 * e.g. amount
+		 */
+		public final String token;
+
+		protected Match(String token, String match, String fullToken, int amount) {
+			Validate.notEmpty(token);
+			Validate.notEmpty(match);
+			Validate.notEmpty(fullToken);
+			Validate.isTrue(amount > 0);
+			this.token = token;
 			this.match = match;
-			this.tokenWithoutAmount = tokenWithoutAmount;
+			this.fullToken = fullToken;
 			this.amount = amount;
 		}
 
-		protected Match(String match, String tokenWithoutAmount) {
-			this(match, tokenWithoutAmount, 1);
+		protected Match(String token, String match, String fullToken) {
+			this(token, match, fullToken, 1);
 		}
 
 		@Override
 		public String toString() {
-			return "Match [amount=" + amount + ", tokenWithoutAmount=" + tokenWithoutAmount + ", match=" + match + "]";
+			return "Match [amount=" + amount + ", fullToken=" + fullToken + ", match=" + match + ", token=" + token
+					+ "]";
 		}
+
 	}
 
 }

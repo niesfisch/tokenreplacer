@@ -25,9 +25,4 @@ public interface Generator {
 	 * @return the generated String that will be used to replace a token
 	 */
 	String generate();
-	
-	/**
-	 * @return the token that this generator is able to replace
-	 */
-	String forToken();
 }

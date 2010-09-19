@@ -26,8 +26,16 @@ import org.junit.Test;
 public class TokenReplacerIntegrationTest {
 
 	@Test
+	public void thatStaticValuesWork() {
+		TokenReplacer replacer = new TokenReplacer().register(new Token("random").replacedBy("1234"));
+		assertEquals("1234", replacer.substitute("${random}"));
+	}
+
+	@Test
 	public void thatDefaultPatternWorks() {
-		TokenReplacer replacer = new TokenReplacer().register(new NumberGenerator()).register(new SomeCharGenerator());
+		TokenReplacer replacer = new TokenReplacer();
+		replacer.register(new Token("random").replacedBy(new NumberGenerator()));
+		replacer.register(new Token("somechar").replacedBy(new SomeCharGenerator()));
 
 		assertEquals("98765", replacer.substitute("${random}"));
 		assertEquals("abc 98765", replacer.substitute("${somechar} ${random}"));
@@ -39,8 +47,9 @@ public class TokenReplacerIntegrationTest {
 
 	@Test
 	public void thatForcedPatternWorks() {
-		TokenReplacer replacer = new TokenReplacer().register(new NumberGenerator()).withTokenStart("[").withTokenEnd(
-				"]").withAmountStart("{").withAmountEnd("}");
+		TokenReplacer replacer = new TokenReplacer();
+		replacer.register(new Token("random").replacedBy(new NumberGenerator()).withTokenStart("[").withTokenEnd("]")
+				.withAmountStart("{").withAmountEnd("}"));
 
 		assertEquals("98765", replacer.substitute("[random]"));
 		assertEquals("9876598765", replacer.substitute("[random][random]"));
@@ -54,22 +63,12 @@ public class TokenReplacerIntegrationTest {
 		public String generate() {
 			return "98765";
 		}
-
-		@Override
-		public String forToken() {
-			return "random";
-		}
 	}
 
 	private class SomeCharGenerator implements Generator {
 		@Override
 		public String generate() {
 			return "abc";
-		}
-
-		@Override
-		public String forToken() {
-			return "somechar";
 		}
 	}
 }

@@ -36,4 +36,10 @@ final class Validate {
 		}
 	}
 
+	public static void isTrue(boolean test) {
+		if (!test) {
+			throw new IllegalArgumentException("given condition was not true!");
+		}
+	}
+
 }

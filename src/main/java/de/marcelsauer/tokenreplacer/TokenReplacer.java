@@ -29,8 +29,6 @@ public class TokenReplacer {
 
 	private Map<String, Generator> generators = new HashMap<String, Generator>();
 	private TokenExtractor extractor;
-	private String tokenStart = Constants.DEFAULT_TOKEN_START;
-	private String tokenEnd = Constants.DEFAULT_TOKEN_END;
 
 	/**
 	 * use this constructor if you want to overwrite the extraction logic with
@@ -64,10 +62,10 @@ public class TokenReplacer {
 
 		for (String token : parts.keySet()) {
 			final Match match = parts.get(token);
-			final Generator generator = generators.get(match.tokenWithoutAmount);
+			final Generator generator = generators.get(match.token);
 			check(generator, token);
 			final String replacement = getReplacement(match, generator);
-			final String quotedPattern = Pattern.quote(tokenStart + token + tokenEnd);
+			final String quotedPattern = Pattern.quote(match.fullToken);
 			toSubstitute = toSubstitute.replaceAll(quotedPattern, replacement);
 		}
 		return toSubstitute;
@@ -91,43 +89,6 @@ public class TokenReplacer {
 		if (generator == null) {
 			throw new IllegalStateException(String.format("no generator for key '%s' found", token));
 		}
-	}
-
-	/**
-	 * @param generator
-	 *            to use for a specific token
-	 * @return
-	 */
-	public TokenReplacer register(final Generator generator) {
-		Validate.notNull(generator);
-		this.generators.put(generator.forToken(), generator);
-		return this;
-	}
-
-	/**
-	 * @param tokenStart
-	 *            the start to identify a token e.g. ${date} -> ${ would be the
-	 *            start token
-	 * @return the {@link TokenReplacer} to allow method chaining
-	 */
-	public TokenReplacer withTokenStart(final String tokenStart) {
-		Validate.notEmpty(tokenStart);
-		this.tokenStart = tokenStart;
-		this.extractor.withTokenStart(tokenStart);
-		return this;
-	}
-
-	/**
-	 * @param tokenEnd
-	 *            the end to identify a token e.g. ${date} -> } would be the end
-	 *            token
-	 * @return the {@link TokenReplacer} to allow method chaining
-	 */
-	public TokenReplacer withTokenEnd(final String tokenEnd) {
-		Validate.notEmpty(tokenEnd);
-		this.tokenEnd = tokenEnd;
-		this.extractor.withTokenEnd(tokenEnd);
-		return this;
 	}
 
 	/**
@@ -166,19 +127,20 @@ public class TokenReplacer {
 	 * @return the {@link TokenReplacer} to allow method chaining
 	 */
 	public TokenReplacer register(final String token, final String value) {
-		this.register(new Generator() {
-
-			@Override
-			public String generate() {
-				return value;
-			}
-
-			@Override
-			public String forToken() {
-				return token;
-			}
-		});
+		Validate.notEmpty(token);
+		Validate.notNull(value);
+		this.register(new Token(token).replacedBy(value));
 		return this;
 	}
 
+	public TokenReplacer register(final Token token) {
+		Validate.notNull(token);
+		Validate.notNull(token.getGenerator());
+		this.extractor.withTokenStart(token.getTokenStart());
+		this.extractor.withTokenEnd(token.getTokenEnd());
+		this.extractor.withAmountStart(token.getAmountStart());
+		this.extractor.withAmountEnd(token.getAmountEnd());
+		this.generators.put(token.getToken(), token.getGenerator());
+		return this;
+	}
 }

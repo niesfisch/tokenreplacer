@@ -36,20 +36,21 @@ public class DefaultTokenExtractorTest {
 		Map<String, Match> matches = extractor.extract("${number}");
 		assertEquals(1, matches.size());
 		assertEquals(1, matches.get("number").amount);
-		assertEquals("number", matches.get("number").tokenWithoutAmount);
+		assertEquals("${number}", matches.get("number").fullToken);
+		assertEquals("number", matches.get("number").match);
 
 		matches = extractor.extract("${number}${number}${number}");
 		assertEquals(1, matches.size());
 		assertEquals(1, matches.get("number").amount);
-		assertEquals("number", matches.get("number").tokenWithoutAmount);
+		assertEquals("${number}", matches.get("number").fullToken);
 
 		matches = extractor.extract(".... ${number} .... ${char} ..... ${number} ....");
 		assertEquals(2, matches.size());
 		assertEquals(1, matches.get("number").amount);
-		assertEquals("number", matches.get("number").tokenWithoutAmount);
+		assertEquals("${number}", matches.get("number").fullToken);
 
 		assertEquals(1, matches.get("char").amount);
-		assertEquals("char", matches.get("char").tokenWithoutAmount);
+		assertEquals("${char}", matches.get("char").fullToken);
 
 	}
 
@@ -59,7 +60,9 @@ public class DefaultTokenExtractorTest {
 		Map<String, Match> matches = extractor.extract("${number[2]}");
 		assertEquals(1, matches.size());
 		assertEquals(2, matches.get("number[2]").amount);
-		assertEquals("number", matches.get("number[2]").tokenWithoutAmount);
+		assertEquals("${number[2]}", matches.get("number[2]").fullToken);
+		assertEquals("number[2]", matches.get("number[2]").match);
+		assertEquals("number", matches.get("number[2]").token);
 	}
 
 	@Test
@@ -68,6 +71,7 @@ public class DefaultTokenExtractorTest {
 		Map<String, Match> matches = extractor.extract("${number(10)}");
 		assertEquals(1, matches.size());
 		assertEquals(10, matches.get("number(10)").amount);
+		assertEquals("number", matches.get("number(10)").token);
 	}
 
 	@Test
