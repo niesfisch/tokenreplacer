@@ -1,13 +1,10 @@
 package de.marcelsauer.tokenreplacer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
-
-import de.marcelsauer.tokenreplacer.TokenExtractor.Match;
 
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
@@ -31,87 +28,74 @@ import de.marcelsauer.tokenreplacer.TokenExtractor.Match;
 public class DefaultTokenExtractorTest {
 
 	@Test
-	public void thatDefaultEnclosingCharWorks() {
+	public void thatNoArgsWork() {
 		TokenExtractor extractor = new DefaultTokenExtractor();
-		Map<String, Match> matches = extractor.extract("${number}");
+		extractor.register(new Token("number"));
+
+		Set<Token> matches = extractor.extract("${number}");
 		assertEquals(1, matches.size());
-		assertEquals(1, matches.get("number").amount);
-		assertEquals("${number}", matches.get("number").fullToken);
-		assertEquals("number", matches.get("number").match);
-
-		matches = extractor.extract("${number}${number}${number}");
-		assertEquals(1, matches.size());
-		assertEquals(1, matches.get("number").amount);
-		assertEquals("${number}", matches.get("number").fullToken);
-
-		matches = extractor.extract(".... ${number} .... ${char} ..... ${number} ....");
-		assertEquals(2, matches.size());
-		assertEquals(1, matches.get("number").amount);
-		assertEquals("${number}", matches.get("number").fullToken);
-
-		assertEquals(1, matches.get("char").amount);
-		assertEquals("${char}", matches.get("char").fullToken);
-
+		Token match = matches.iterator().next();
+		assertEquals("number", match.getToken());
+		assertEquals(0, match.getArgs().length);
 	}
 
 	@Test
-	public void thatAmountWithDefaultEnclosingCharWorks() {
+	public void thatArgsWork() {
 		TokenExtractor extractor = new DefaultTokenExtractor();
-		Map<String, Match> matches = extractor.extract("${number[2]}");
+		extractor.register(new Token("number"));
+
+		Set<Token> matches = extractor.extract("${number(a)}");
 		assertEquals(1, matches.size());
-		assertEquals(2, matches.get("number[2]").amount);
-		assertEquals("${number[2]}", matches.get("number[2]").fullToken);
-		assertEquals("number[2]", matches.get("number[2]").match);
-		assertEquals("number", matches.get("number[2]").token);
-	}
+		Token token = matches.iterator().next();
+		assertEquals("number", token.getToken());
+		assertEquals("${number(a)}", token.getFullToken());
+		assertEquals(1, token.getArgs().length);
+		assertEquals("a", token.getArgs()[0]);
 
-	@Test
-	public void thatAmountWithForcedEnclosingCharWorks() {
-		TokenExtractor extractor = new DefaultTokenExtractor().withAmountStart("(").withAmountEnd(")");
-		Map<String, Match> matches = extractor.extract("${number(10)}");
+		matches = extractor.extract("${number(1,2,3,4)}");
 		assertEquals(1, matches.size());
-		assertEquals(10, matches.get("number(10)").amount);
-		assertEquals("number", matches.get("number(10)").token);
+		token = matches.iterator().next();
+		assertEquals("number", token.getToken());
+		assertEquals("${number(1,2,3,4)}", token.getFullToken());
+		assertEquals(4, token.getArgs().length);
+		assertEquals("1", token.getArgs()[0]);
+		assertEquals("2", token.getArgs()[1]);
+		assertEquals("3", token.getArgs()[2]);
+		assertEquals("4", token.getArgs()[3]);
 	}
 
-	@Test
-	public void thatForcedEnclosingCharWorks() {
-		TokenExtractor extractor = new DefaultTokenExtractor().withTokenStart("[").withTokenEnd("]");
-		Map<String, Match> matches = extractor.extract("[number]");
-		assertEquals(1, matches.size());
-		assertEquals(1, matches.get("number").amount);
-	}
-
-	@Test
-	public void throwsIllegalArgumentExceptionForEmptyEnclosingChars() {
-		expectIllegalArgumentExceptionForEmptyEnclosingChars("${ }");
-		expectIllegalArgumentExceptionForEmptyEnclosingChars("${        }");
-	}
-
-	@Test
-	public void throwsIllegalStateExceptionForEmptyTokens() {
-		expectIllegalArgumentExceptionForEmptyKeys("(", null);
-		expectIllegalArgumentExceptionForEmptyKeys(null, ")");
-		expectIllegalArgumentExceptionForEmptyKeys(null, null);
-		expectIllegalArgumentExceptionForEmptyKeys(null, ")");
-		expectIllegalArgumentExceptionForEmptyKeys("(", null);
-	}
-
-	private void expectIllegalArgumentExceptionForEmptyKeys(String start, String end) {
-		try {
-			new DefaultTokenExtractor().withTokenStart(start).withTokenEnd(end);
-			fail("expected IllegalArgumentException to be thrown");
-		} catch (IllegalArgumentException expected) {
-		}
-
-	}
-
-	private void expectIllegalArgumentExceptionForEmptyEnclosingChars(String toReplace) {
-		try {
-			TokenExtractor extractor = new DefaultTokenExtractor();
-			extractor.extract(toReplace);
-			fail("expected IllegalArgumentException to be thrown");
-		} catch (IllegalArgumentException expected) {
-		}
-	}
+	// @Test
+	// public void throwsIllegalArgumentExceptionForEmptyEnclosingChars() {
+	// expectIllegalArgumentExceptionForEmptyEnclosingChars("${ }");
+	// expectIllegalArgumentExceptionForEmptyEnclosingChars("${        }");
+	// }
+	//
+	// @Test
+	// public void throwsIllegalStateExceptionForEmptyTokens() {
+	// expectIllegalArgumentExceptionForEmptyKeys("(", null);
+	// expectIllegalArgumentExceptionForEmptyKeys(null, ")");
+	// expectIllegalArgumentExceptionForEmptyKeys(null, null);
+	// expectIllegalArgumentExceptionForEmptyKeys(null, ")");
+	// expectIllegalArgumentExceptionForEmptyKeys("(", null);
+	// }
+	//
+	// private void expectIllegalArgumentExceptionForEmptyKeys(String start,
+	// String end) {
+	// try {
+	// new DefaultTokenExtractor().register(null);
+	// fail("expected IllegalArgumentException to be thrown");
+	// } catch (IllegalArgumentException expected) {
+	// }
+	//
+	// }
+	//
+	// private void expectIllegalArgumentExceptionForEmptyEnclosingChars(String
+	// toReplace) {
+	// try {
+	// TokenExtractor extractor = new DefaultTokenExtractor();
+	// extractor.extract(toReplace);
+	// fail("expected IllegalArgumentException to be thrown");
+	// } catch (IllegalArgumentException expected) {
+	// }
+	// }
 }

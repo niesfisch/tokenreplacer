@@ -25,4 +25,12 @@ public interface Generator {
 	 * @return the generated String that will be used to replace a token
 	 */
 	String generate();
+
+	/**
+	 * @param args
+	 *            to inject into the Generator. will be called before the call
+	 *            {@link #generate()}. will never be null but can be of size 0!
+	 */
+	void inject(String[] args);
+
 }

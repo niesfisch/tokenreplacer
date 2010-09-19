@@ -1,10 +1,8 @@
 package de.marcelsauer.tokenreplacer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
-
-import de.marcelsauer.tokenreplacer.TokenExtractor.Match;
 
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
@@ -27,7 +25,8 @@ import de.marcelsauer.tokenreplacer.TokenExtractor.Match;
  */
 public class TokenReplacer {
 
-	private Map<String, Generator> generators = new HashMap<String, Generator>();
+	private final Set<Token> tokens = new HashSet<Token>();
+
 	private TokenExtractor extractor;
 
 	/**
@@ -58,61 +57,30 @@ public class TokenReplacer {
 	 */
 	public String substitute(String toSubstitute) {
 		Validate.notEmpty(toSubstitute);
-		final Map<String, Match> parts = extractor.extract(toSubstitute);
-
-		for (String token : parts.keySet()) {
-			final Match match = parts.get(token);
-			final Generator generator = generators.get(match.token);
+		checkState();
+		Set<Token> tokens = this.extractor.extract(toSubstitute);
+		for (Token token : tokens) {
+			final Generator generator = token.getGenerator();
 			check(generator, token);
-			final String replacement = getReplacement(match, generator);
-			final String quotedPattern = Pattern.quote(match.fullToken);
+			generator.inject(token.getArgs());
+			final String replacement = generator.generate();
+			final String quotedPattern = Pattern.quote(token.getFullToken());
 			toSubstitute = toSubstitute.replaceAll(quotedPattern, replacement);
 		}
 		return toSubstitute;
 	}
 
-	private String getReplacement(final Match match, final Generator generator) {
-		final String value = generator.generate();
-
-		final StringBuffer replacement = new StringBuffer("");
-		if (match.amount > 1) {
-			for (int i = 0; i < match.amount; i++) {
-				replacement.append(value);
-			}
-		} else {
-			replacement.append(value);
+	private void checkState() {
+		Validate.notNull(this.extractor);
+		if (this.tokens.size() == 0) {
+			throw new IllegalStateException("please define at least one value or generator for a given token");
 		}
-		return replacement.toString();
 	}
 
-	private void check(final Generator generator, final String token) {
+	private void check(final Generator generator, final Token token) {
 		if (generator == null) {
-			throw new IllegalStateException(String.format("no generator for key '%s' found", token));
+			throw new IllegalStateException(String.format("no generator for key '%s' found", token.getToken()));
 		}
-	}
-
-	/**
-	 * @param amountStart
-	 *            the start to identify the amount part of the token e.g.
-	 *            ${date[2]} -> [ would be the start
-	 * @return the {@link TokenReplacer} to allow method chaining
-	 */
-	public TokenReplacer withAmountStart(final String amountStart) {
-		Validate.notEmpty(amountStart);
-		this.extractor.withAmountStart(amountStart);
-		return this;
-	}
-
-	/**
-	 * @param amountEnd
-	 *            the end to identify the amount part of the token e.g.
-	 *            ${date[2]} -> ] would be the start
-	 * @return the {@link TokenReplacer} to allow method chaining
-	 */
-	public TokenReplacer withAmountEnd(final String amountEnd) {
-		Validate.notEmpty(amountEnd);
-		this.extractor.withAmountEnd(amountEnd);
-		return this;
 	}
 
 	/**
@@ -135,12 +103,9 @@ public class TokenReplacer {
 
 	public TokenReplacer register(final Token token) {
 		Validate.notNull(token);
-		Validate.notNull(token.getGenerator());
-		this.extractor.withTokenStart(token.getTokenStart());
-		this.extractor.withTokenEnd(token.getTokenEnd());
-		this.extractor.withAmountStart(token.getAmountStart());
-		this.extractor.withAmountEnd(token.getAmountEnd());
-		this.generators.put(token.getToken(), token.getGenerator());
+		Validate.notNull(token.getGenerator(), "please specifiy a value or a generator for the token!");
+		this.tokens.add(token);
+		this.extractor.register(token);
 		return this;
 	}
 }

@@ -3,14 +3,12 @@ package de.marcelsauer.tokenreplacer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import de.marcelsauer.tokenreplacer.TokenExtractor.Match;
 
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
@@ -44,73 +42,49 @@ public class TokenReplacerTest {
 
 	@Test
 	public void thatDefaultPatternWorks() {
-		replacer.register(new Token("random").replacedBy(new NumberGenerator()));
+		Token token = new Token("random").replacedBy(new NumberGenerator());
+		replacer.register(token);
 
-		Map<String, Match> matches = newMatch("random", "${random}");
+		mockRandom(token);
 
-		Mockito.when(extractor.extract("${random}")).thenReturn(matches);
 		assertEquals("1234", replacer.substitute("${random}"));
-
-		Mockito.when(extractor.extract("${random}${random}")).thenReturn(matches);
 		assertEquals("12341234", replacer.substitute("${random}${random}"));
-
-		Mockito.when(extractor.extract("... ${random} ${random}    ")).thenReturn(matches);
 		assertEquals("... 1234 1234    ", replacer.substitute("... ${random} ${random}    "));
+	}
+
+	private void mockRandom(Token token) {
+		Set<Token> tokens = new HashSet<Token>();
+		tokens.add(token);
+		Mockito.when(extractor.extract(Mockito.anyString())).thenReturn(tokens);
 	}
 
 	@Test
 	public void thatForcedPatternWorks() {
-		replacer.register(new Token("random").replacedBy(new NumberGenerator()).withTokenStart("[").withTokenEnd("]"));
-
-		Map<String, Match> matches = newMatch("random", "[random]");
-
-		Mockito.when(extractor.extract("[random]")).thenReturn(matches);
+		Token token = new Token("random").replacedBy(new NumberGenerator()).withTokenStart("[").withTokenEnd("]");
+		replacer.register(token);
+		mockRandom(token);
 		assertEquals("1234", replacer.substitute("[random]"));
 	}
 
 	@Test
 	public void thatStaticStringsWork() {
-		replacer.register("aStaticString", "the content");
-
-		Map<String, Match> matches = newMatch("aStaticString", "${aStaticString}");
-
-		Mockito.when(extractor.extract("${aStaticString}")).thenReturn(matches);
-
-		assertEquals("the content", replacer.substitute("${aStaticString}"));
+		replacer.register("random", "666");
+		mockRandom(new Token("random").replacedBy("666"));
+		assertEquals("666", replacer.substitute("${random}"));
 	}
 
 	@Test
-	public void thatReplacementWithAmountWorks() {
-		replacer.register(new Token("aStaticString").replacedBy("1"));
-
-		Map<String, Match> matches = newMatch("aStaticString", "${aStaticString}", 3);
-		Mockito.when(extractor.extract("${aStaticString}")).thenReturn(matches);
-
-		assertEquals("111", replacer.substitute("${aStaticString}"));
-	}
-
-	private Map<String, Match> newMatch(String match, String fullToken) {
-		Map<String, Match> matches = new HashMap<String, Match>();
-		matches.put(fullToken, new Match(match, fullToken, fullToken));
-		return matches;
-	}
-
-	private Map<String, Match> newMatch(String match, String fullToken, int amount) {
-		Map<String, Match> matches = new HashMap<String, Match>();
-		matches.put(fullToken, new Match(match, fullToken, fullToken, amount));
-		return matches;
-	}
-
-	@Test
-	public void throwsIllegalStateExceptionIfNoGeneratorIsFound() {
-		Map<String, Match> matches = newMatch("random", "${random}");
-
-		Mockito.when(extractor.extract("${random}")).thenReturn(matches);
+	public void throwsProperExceptionForInvalidSetup() {
 		try {
 			replacer.substitute("${random}");
 			fail("expected IllegalStateException to be thrown");
 		} catch (IllegalStateException expected) {
+		}
 
+		try {
+			replacer.register(new Token("random"));
+			fail("expected IllegalArgumentException to be thrown");
+		} catch (IllegalArgumentException expected) {
 		}
 	}
 
@@ -118,6 +92,10 @@ public class TokenReplacerTest {
 		@Override
 		public String generate() {
 			return "1234";
+		}
+
+		@Override
+		public void inject(String[] args) {
 		}
 	}
 }

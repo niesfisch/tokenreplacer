@@ -24,7 +24,8 @@ public final class Constants {
 
     public static final String DEFAULT_TOKEN_START = "${";
     public static final String DEFAULT_TOKEN_END = "}";
-    public static final String DEFAULT_AMOUNT_START = "[";
-    public static final String DEFAULT_AMOUNT_END = "]";
+	public static final String DEFAULT_ARGS_SEPARATOR = ",";
+	public static final String DEFAULT_ARGS_START = "(";
+	public static final String DEFAULT_ARGS_END = ")";
 
 }

@@ -1,6 +1,6 @@
 package de.marcelsauer.tokenreplacer;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
@@ -21,88 +21,60 @@ import java.util.Map;
  * You should have received a copy of the GNU General Public License along with
  * Token Replacer. If not, see <http://www.gnu.org/licenses/>.
  */
-public interface TokenExtractor {
+interface TokenExtractor {
 
-	/**
-	 * @param input
-	 *            input string to extract all possible tokens that need to be
-	 *            replaced
-	 * @return the map with key->value matches e.g. amount[2] -> Match
-	 *         (amount[2], amount, 2)
-	 */
-	Map<String, Match> extract(String input);
+	Set<Token> extract(String input);
 
-	/**
-	 * @param tokenStart
-	 *            e.g. $(
-	 * @return the token extractor to allow method chaining
-	 */
-	TokenExtractor withTokenStart(String tokenStart);
+	void register(Token token);
 
-	/**
-	 * @param tokenEnd
-	 *            e.g. )
-	 * @return the token extractor to allow method chaining
-	 */
-	TokenExtractor withTokenEnd(String tokenEnd);
-
-	/**
-	 * @param amountStart
-	 *            e.g. [
-	 * @return the token extractor to allow method chaining
-	 */
-	TokenExtractor withAmountStart(String amountStart);
-
-	/**
-	 * @param amountEnd
-	 *            e.g. ]
-	 * @return the token extractor to allow method chaining
-	 */
-	TokenExtractor withAmountEnd(String amountEnd);
-
-	class Match {
-
-		/**
-		 * e.g. random[1]
-		 */
-		public final String match;
-
-		/**
-		 * e.g. ${random[1]}
-		 */
-		public final String fullToken;
-
-		/**
-		 * e.g. 1
-		 */
-		public final int amount;
-
-		/**
-		 * e.g. amount
-		 */
-		public final String token;
-
-		protected Match(String token, String match, String fullToken, int amount) {
-			Validate.notEmpty(token);
-			Validate.notEmpty(match);
-			Validate.notEmpty(fullToken);
-			Validate.isTrue(amount > 0);
-			this.token = token;
-			this.match = match;
-			this.fullToken = fullToken;
-			this.amount = amount;
-		}
-
-		protected Match(String token, String match, String fullToken) {
-			this(token, match, fullToken, 1);
-		}
-
-		@Override
-		public String toString() {
-			return "Match [amount=" + amount + ", fullToken=" + fullToken + ", match=" + match + ", token=" + token
-					+ "]";
-		}
-
-	}
+	// class Match {
+	//
+	// final Token token;
+	// final String[] args;
+	// final String fullToken;
+	//
+	// Match(Token token, String[] args, String fullToken) {
+	// Validate.notNull(token);
+	// Validate.notNull(args);
+	// Validate.notEmpty(fullToken);
+	// this.token = token;
+	// this.args = args;
+	// this.fullToken = fullToken;
+	// }
+	//
+	// @Override
+	// public String toString() {
+	// return "Match [args=" + Arrays.toString(args) + ", fullToken=" +
+	// fullToken + ", token=" + token + "]";
+	// }
+	//
+	// @Override
+	// public int hashCode() {
+	// final int prime = 31;
+	// int result = 1;
+	// result = prime * result + Arrays.hashCode(args);
+	// result = prime * result + ((token == null) ? 0 : token.hashCode());
+	// return result;
+	// }
+	//
+	// @Override
+	// public boolean equals(Object obj) {
+	// if (this == obj)
+	// return true;
+	// if (obj == null)
+	// return false;
+	// if (getClass() != obj.getClass())
+	// return false;
+	// Match other = (Match) obj;
+	// if (!Arrays.equals(args, other.args))
+	// return false;
+	// if (token == null) {
+	// if (other.token != null)
+	// return false;
+	// } else if (!token.equals(other.token))
+	// return false;
+	// return true;
+	// }
+	// }
 
 }

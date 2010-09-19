@@ -19,31 +19,14 @@ package de.marcelsauer.tokenreplacer;
  * You should have received a copy of the GNU General Public License along with
  * Token Replacer. If not, see <http://www.gnu.org/licenses/>.
  */
-final class Validate {
-	public static void notEmpty(final String string, final String message) {
-		if (string == null || string.isEmpty()) {
-			throw new IllegalArgumentException(message);
+public final class Utils {
+	public static String join(String[] s, String delimiter) {
+		StringBuffer buffer = new StringBuffer();
+		for (String part : s) {
+			buffer.append(part);
+			buffer.append(delimiter);
 		}
-	}
-
-	public static void notEmpty(final String string) {
-		notEmpty(string, "the provided string is empty!");
-	}
-
-	public static void notNull(final Object o) {
-		notNull(o, "the object was null!");
-	}
-
-	public static void isTrue(boolean test) {
-		if (!test) {
-			throw new IllegalArgumentException("given condition was not true!");
-		}
-	}
-
-	public static void notNull(Object o, String message) {
-		if (o == null) {
-			throw new IllegalArgumentException(message);
-		}
+		return buffer.toString().replaceFirst(",$", "");
 	}
 
 }

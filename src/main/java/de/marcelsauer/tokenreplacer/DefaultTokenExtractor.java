@@ -1,7 +1,9 @@
 package de.marcelsauer.tokenreplacer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -25,31 +27,33 @@ import java.util.StringTokenizer;
  * 
  * THIS CLASS IS NOT PART OF THE PUBLIC API!
  */
-public class DefaultTokenExtractor implements TokenExtractor {
+class DefaultTokenExtractor implements TokenExtractor {
 
-	private String tokenStart = Constants.DEFAULT_TOKEN_START;
-	private String tokenEnd = Constants.DEFAULT_TOKEN_END;
-	private String amountStart = Constants.DEFAULT_AMOUNT_START;
-	private String amountEnd = Constants.DEFAULT_AMOUNT_END;
+	private Set<Token> tokens = new HashSet<Token>();
 
 	@Override
-	public Map<String, Match> extract(final String input) {
+	public Set<Token> extract(final String input) {
 		Validate.notEmpty(input);
-		final Map<String, Match> matches = new HashMap<String, Match>();
-		checkState();
-		final StringTokenizer st = new StringTokenizer(input, tokenStart);
-		while (st.hasMoreTokens()) {
-			final String nextToken = st.nextToken();
-			if (nextToken.contains(tokenEnd)) {
-				final StringTokenizer en = new StringTokenizer(nextToken, tokenEnd);
-				while (en.hasMoreTokens()) {
-					final String match = en.nextToken();
-					if (nextToken.startsWith(match)) {
-						if ("".equals(match.trim())) {
-							throw new IllegalArgumentException("empty tokens are not supported, error string was: "
-									+ input);
+		final Set<Token> matches = new HashSet<Token>();
+
+		for (Token token : tokens) {
+			final StringTokenizer st = new StringTokenizer(input, token.getTokenStart());
+			while (st.hasMoreTokens()) {
+				final String nextToken = st.nextToken();
+				if (!nextToken.contains(token.getToken())) {
+					continue;
+				}
+				if (nextToken.contains(token.getTokenEnd())) {
+					final StringTokenizer en = new StringTokenizer(nextToken, token.getTokenEnd());
+					while (en.hasMoreTokens()) {
+						final String match = en.nextToken();
+						if (nextToken.startsWith(match)) {
+							if ("".equals(match.trim())) {
+								throw new IllegalArgumentException("empty tokens are not supported, error string was: "
+										+ input);
+							}
+							reportMatch(matches, match, token);
 						}
-						reportMatch(matches, match, tokenStart, tokenEnd);
 					}
 				}
 			}
@@ -58,82 +62,45 @@ public class DefaultTokenExtractor implements TokenExtractor {
 		return matches;
 	}
 
-	protected void checkState() {
-		if (tokenStart == null || "".equals(tokenStart.trim())) {
-			throw new IllegalStateException("token start pattern must not be null or empty");
-		}
-		if (tokenEnd == null || "".equals(tokenEnd.trim())) {
-			throw new IllegalStateException("token end pattern must not be null or empty");
-		}
-		if (amountStart == null || "".equals(amountStart.trim())) {
-			throw new IllegalStateException("amount start pattern must not be null or empty");
-		}
-		if (amountEnd == null || "".equals(amountEnd.trim())) {
-			throw new IllegalStateException("amount end pattern must not be null or empty");
-		}
-	}
-
 	/**
 	 * @todo seems like duplicated logic here, refactor
 	 */
-	private Match extractMatch(final String match, String tokenStart, String tokenEnd) {
-		String fullToken = "";
-		String token = "";
-		int amount = 1;
-		final StringTokenizer st = new StringTokenizer(match, amountStart);
+	private Token extractToken(final String match, Token token) {
+		String[] args = new String[] {};
+		final StringTokenizer st = new StringTokenizer(match, Constants.DEFAULT_ARGS_START);
 		while (st.hasMoreTokens()) {
 			final String nextToken = st.nextToken();
-			if (nextToken.contains(amountEnd)) {
-				final StringTokenizer en = new StringTokenizer(nextToken, amountEnd);
+			if (nextToken.contains(Constants.DEFAULT_ARGS_END)) {
+				final StringTokenizer en = new StringTokenizer(nextToken, Constants.DEFAULT_ARGS_END);
 				while (en.hasMoreTokens()) {
-					final String amountMatch = en.nextToken();
-					if (amountMatch != null && !"".equals(amountMatch.trim())) {
-						amount = Integer.valueOf(amountMatch);
-						fullToken = tokenStart + match + tokenEnd;
+					final String argsMatch = en.nextToken();
+					if (argsMatch != null && !"".equals(argsMatch.trim())) {
+						args = extractArgsFrom(argsMatch);
 					}
 				}
-			} else {
-				token = nextToken; 
-				fullToken = tokenStart + match + tokenEnd;
 			}
 		}
-		return new Match(token, match, fullToken, amount);
+		token.setArgs(args);
+		return token;
 	}
 
-	protected void reportMatch(final Map<String, Match> matches, final String match, String tokenStart, String tokenEnd) {
-		final Match extractedMatch = extractMatch(match, tokenStart, tokenEnd);
-		if (matches.containsKey(extractedMatch.match)) {
-			matches.put(extractedMatch.match, extractedMatch);
-		} else {
-			matches.put(extractedMatch.match, extractedMatch);
+	private String[] extractArgsFrom(String args) {
+		List<String> result = new ArrayList<String>();
+		final StringTokenizer en = new StringTokenizer(args, Constants.DEFAULT_ARGS_SEPARATOR);
+		while (en.hasMoreTokens()) {
+			result.add(en.nextToken());
+
 		}
+		return result.toArray(new String[] {});
+	}
+
+	protected void reportMatch(final Set<Token> matches, final String match, Token token) {
+		matches.add(extractToken(match, token));
 	}
 
 	@Override
-	public TokenExtractor withTokenEnd(final String tokenEnd) {
-		Validate.notEmpty(tokenEnd);
-		this.tokenEnd = tokenEnd;
-		return this;
+	public void register(Token token) {
+		this.tokens.add(token);
 	}
 
-	@Override
-	public TokenExtractor withTokenStart(final String tokenStart) {
-		Validate.notEmpty(tokenStart);
-		this.tokenStart = tokenStart;
-		return this;
-	}
-
-	@Override
-	public TokenExtractor withAmountStart(final String amountStart) {
-		Validate.notEmpty(amountStart);
-		this.amountStart = amountStart;
-		return this;
-	}
-
-	@Override
-	public TokenExtractor withAmountEnd(final String amountEnd) {
-		Validate.notEmpty(amountEnd);
-		this.amountEnd = amountEnd;
-		return this;
-	}
 }
