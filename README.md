@@ -6,7 +6,7 @@ You can replace tokens with simple static strings or strings generated "on-the-f
 
 You can even pass arguments to the generator which makes it pretty powerful.
 
-Have a look at [some samples](http://github.com/niesfisch/tokenreplacer/blob/master/src/test/java/de/marcelsauer/tokenreplacer/TokenReplacerIntegrationTest.java)
+Have a look at [some samples](http://github.com/niesfisch/tokenreplacer/blob/master/src/test/java/de/marcelsauer/tokenreplacer/TokyTest.java)
 
 ## a picture tells more than a thousand words ;-)
 
