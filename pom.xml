@@ -8,10 +8,10 @@
 	<packaging>jar</packaging>
 	<name>toky</name>
 	<developers>
-	   <developer>
-	       <name>Marcel Sauer</name>
-	       <email>marcel (dot) sauer (at) gmx (dot) de</email>
-	   </developer>
+		<developer>
+			<name>Marcel Sauer</name>
+			<email>marcel (dot) sauer (at) gmx (dot) de</email>
+		</developer>
 	</developers>
 
 	<properties>
@@ -35,27 +35,98 @@
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.0-beta-9</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.0-beta-9</version>
+			</plugin>
+			<!-- jar with source code -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- jar with javadoc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- license stuff -->
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.6.0</version>
+				<inherited>false</inherited>
+				<configuration>
+					<header>${basedir}/license.txt</header>
+					<aggregate>true</aggregate>
+					<failIfMissing>true</failIfMissing>
+					<encoding>UTF-8</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
 	</build>
 	<scm>
-		<connection>scm:git:git@github.com:niesfisch/tokenreplacer.git</connection>
+		<connection>scm:git:git@github.com:niesfisch/tokenreplacer.git
+		</connection>
 		<url>scm:git:git@github.com:niesfisch/tokenreplacer.git</url>
-		<developerConnection>scm:git:git@github.com:niesfisch/tokenreplacer.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:niesfisch/tokenreplacer.git
+		</developerConnection>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<id>release-repo</id>
+			<url>file:///Users/msauer/.m2/release-repository/tokenreplacer</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<url>file:///Users/msauer/.m2/snapshot-repository/tokenreplacer</url>
+		</snapshotRepository>
+	</distributionManagement>
+	<!--
+
+		<distributionManagement> <snapshotRepository>
+		<id>sonatype-nexus-snapshots</id> <name>Sonatype Nexus
+		Snapshots</name>
+		<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> <repository> <id>sonatype-nexus-staging</id>
+		<name>Nexus Release Repository</name>
+		<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository> </distributionManagement>
+	-->
 </project>
