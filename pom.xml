@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.marcelsauer</groupId>
@@ -6,6 +7,13 @@
 	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>tokenreplacer</name>
+	<description>Token Replacer is a simple and small Java Library that
+		helps replacing tokens in strings.
+		You can replace the tokens with static values or create values
+		"on-the-fly" by calling a generator.
+		You can even pass arguments to the generator which makes it pretty
+		powerful.</description>
+	<url>http://github.com/niesfisch/tokenreplacer</url>
 	<developers>
 		<developer>
 			<name>Marcel Sauer</name>
@@ -55,7 +63,7 @@
 				<executions>
 					<execution>
 						<id>attach-sources</id>
-						<phase>package</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
@@ -97,9 +105,16 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
+	<licenses>
+		<license>
+			<name>The GNU General Public License, Version 3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<scm>
 		<connection>scm:git:git@github.com:niesfisch/tokenreplacer.git
 		</connection>
@@ -107,25 +122,53 @@
 		<developerConnection>scm:git:git@github.com:niesfisch/tokenreplacer.git
 		</developerConnection>
 	</scm>
-	<distributionManagement>
-		<repository>
-			<id>release-repo</id>
-			<url>file:///Users/msauer/.m2/release-repository/tokenreplacer</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshot-repo</id>
-			<url>file:///Users/msauer/.m2/snapshot-repository/tokenreplacer</url>
-		</snapshotRepository>
-	</distributionManagement>
-	<!--
 
-		<distributionManagement> <snapshotRepository>
-		<id>sonatype-nexus-snapshots</id> <name>Sonatype Nexus
-		Snapshots</name>
-		<url>http://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository> <repository> <id>sonatype-nexus-staging</id>
-		<name>Nexus Release Repository</name>
-		<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository> </distributionManagement>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+			</url>
+		</repository>
+	</distributionManagement>
+
+	<!--
+		This profile will be activated when the value of maven property
+		performRelease is true. When you use maven-release-plugin and run mvn
+		release:perform, the property value will be set to true.
 	-->
+	<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>

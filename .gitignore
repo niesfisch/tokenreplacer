@@ -2,3 +2,4 @@ target
 .settings
 release.properties
 pom.xml.releaseBackup
+releases
