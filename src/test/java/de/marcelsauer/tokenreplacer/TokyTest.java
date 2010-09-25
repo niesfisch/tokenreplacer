@@ -121,7 +121,7 @@ public class TokyTest {
 			toky.substitute(toSubstitute);
 			fail(String.format("expected IllegalStateException to be thrown for token '%s'", toSubstitute));
 		} catch (IllegalStateException expected) {
-			System.out.println("expected exception is: " + expected);
+			//System.out.println("expected exception is: " + expected);
 		}
 	}
 
