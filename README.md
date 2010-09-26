@@ -6,14 +6,106 @@ You can replace tokens with simple static strings or strings generated "on-the-f
 
 You can even pass arguments to the generator which makes it pretty powerful.
 
-Have a look at [some samples](http://github.com/niesfisch/tokenreplacer/blob/master/src/test/java/de/marcelsauer/tokenreplacer/TokyTest.java)
+## Usage
 
-## a picture tells more than a thousand words ;-)
+<p>
+simplest use case, only <b>static values</b>
+<p>
 
-![screenshot](http://www.marcel-sauer.de/tokenreplacer/tokenreplacer.png)
+<pre>
+TokenReplacer toky = new Toky().register(&quot;number&quot;, &quot;123&quot;);
+toky.substitute(&quot;i can count to {number}&quot;);
+</pre>
+
+<p>
+is same as registering an <b>explicit {@link Token}</b>
+</p>
+
+<pre>
+toky = new Toky().register(new Token(&quot;number&quot;).replacedBy(&quot;123&quot;));
+toky.substitute(&quot;i can count to {number}&quot;);
+</pre>
+
+<p>
+we can also use a <b>{@link Generator}</b> to <b>dynamically</b> get the
+value (which here does not really make sense ;-)
+<p>
+
+<pre>
+toky = new Toky().register(new Token(&quot;number&quot;).replacedBy(new Generator() {
+
+ &#064;Override
+ public void inject(String[] args) {
+     // not relevant here
+ }
+
+ &#064;Override
+ public String generate() {
+     return &quot;123&quot;;
+ }
+}));
+</pre>
+<p>
+here we use a generator and <b>pass the arguments</b> "a,b,c" to it, they
+will be injected via {@link Generator#inject(String[] args)} before the call
+to {@link Generator#generate()} is done. it is up to the generator to decide
+what to do with them. this feature makes handling tokens pretty powerful
+because you can write very dynamic generators.
+</p>
+
+<pre>
+toky.substitute(&quot;i can count to {number(a,b,c)}&quot;);
+</pre>
+
+<p>
+of course you can replace all default <b>delimiters</b> with you preferred
+ones, just make sure start and end are different
+<p>
+
+<pre>
+toky.withTokenStart(&quot;*&quot;); // default is '{'
+toky.withTokenEnd(&quot;#&quot;); // default is '}'
+toky.withArgumentDelimiter(&quot;;&quot;); // default is ','
+toky.withArgumentStart(&quot;[&quot;); // default is '('
+toky.withArgumentEnd(&quot;]&quot;); // default is ')'
+</pre>
+
+<p>
+by default Toky will throw IllegalStateExceptions if there was no matching
+value or generator found for a token. you can <b>enable/disable generating
+exceptions</b>.
+</p>
+
+<pre>
+toky.doNotIgnoreMissingValues(); // which is the DEFAULT
+</pre>
+
+<p>
+will turn error reporting for missing values <b>OFF</b>
+</p>
+
+<pre>
+toky.ignoreMissingValues();
+</pre>
+
+<p>
+you can <b>enable/disable generator caching</b>. if you enable caching once a
+generator for a token returned a value this value will be used for all
+subsequent tokens with the same name
+</p>
+
+<pre>
+toky.enableGeneratorCaching();
+toky.disableGeneratorCaching();
+</pre>
+
+## More Samples
+
+Have a look at [the unit test of Toky](http://github.com/niesfisch/tokenreplacer/blob/master/src/test/java/de/marcelsauer/tokenreplacer/TokyTest.java) to see some more samples
 
 ## peeking into the source code and building from scratch
 
     $ git clone http://github.com/niesfisch/tokenreplacer.git tokenreplacer
     $ cd tokenreplacer
     $ mvn clean install
+    

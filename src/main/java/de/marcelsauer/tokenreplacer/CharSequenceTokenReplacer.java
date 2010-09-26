@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Token Replacer. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package de.marcelsauer.tokenreplacer;
 
 import java.text.CharacterIterator;
@@ -27,229 +28,377 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-
+/**
+ * parser implementation based on {@link CharacterIterator} and
+ * {@link StringCharacterIterator}
+ * 
+ * NOT PART OF THE PUBLIC API!
+ * 
+ * @author msauer
+ */
 public class CharSequenceTokenReplacer implements TokenReplacer {
 
-    /**
-     * token stuff
-     */
-    private char tokenStart = Constants.DEFAULT_TOKEN_START;
-    private char tokenEnd = Constants.DEFAULT_TOKEN_END;
+	/**
+	 * token stuff
+	 */
+	protected char tokenStart = Constants.DEFAULT_TOKEN_START;
+	protected char tokenEnd = Constants.DEFAULT_TOKEN_END;
 
-    /**
-     * argument stuff
-     */
-    private char argsStart = Constants.DEFAULT_ARGS_START;
-    private char argsEnd = Constants.DEFAULT_ARGS_END;
-    private char argsSep = Constants.DEFAULT_ARGS_SEPARATOR;
+	/**
+	 * argument stuff
+	 */
+	protected char argsStart = Constants.DEFAULT_ARGS_START;
+	protected char argsEnd = Constants.DEFAULT_ARGS_END;
+	protected char argsSep = Constants.DEFAULT_ARGS_SEPARATOR;
 
-    /**
-     * token state
-     */
-    private boolean isTokenStart;
-    private StringBuffer token = new StringBuffer();
+	/**
+	 * token state
+	 */
+	protected boolean isTokenStart;
+	protected StringBuilder token = new StringBuilder();
 
-    /**
-     * argument state
-     */
-    private boolean isArgsStarted;
-    private StringBuffer args = new StringBuffer();
+	/**
+	 * argument state
+	 */
+	protected boolean isArgsStarted;
+	protected StringBuilder args = new StringBuilder();
 
-    /**
-     * the result that will be returned
-     */
-    private StringBuffer result = new StringBuffer();
+	/**
+	 * the result that will be returned
+	 */
+	protected StringBuilder result = new StringBuilder();
 
-    protected final Map<String, Token> tokens = new HashMap<String, Token>();
+	protected Map<String, String> generatorCache = new HashMap<String, String>();
 
-    @Override
-    public String substitute(final String toSubstitute) {
+	protected boolean ignoreMissingValues = false;
+	protected boolean generatorCachingEnabled = false;
 
-        // reset stuff in case we hold state and the instance is reused
-        reset(true);
+	protected final Map<String, Token> tokens = new HashMap<String, Token>();
 
-        final CharacterIterator it = new StringCharacterIterator(toSubstitute);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#substitute(java.lang.String)
+	 */
+	@Override
+	public String substitute(final String toSubstitute) {
+		if (toSubstitute == null) {
+			return null;
+		}
 
-        for (char character = it.first(); character != CharacterIterator.DONE; character = it.next()) {
-            if (isEndOfToken(character)) {
-                checkEndOfTokenState(toSubstitute);
-                isTokenStart = false;
-                result.append(evalToken());
-                reset(false);
-            } else if (isEndOfArguments(character)) {
-                checkEndOfArgumentsState(toSubstitute);
-                isArgsStarted = false;
-            } else if (isStartOfArguments(character)) {
-                isArgsStarted = true;
-            } else if (appendToToken()) {
-                token.append(character);
-            } else if (isStartOfToken(character)) {
-                isTokenStart = true;
-            } else if (appendToResult()) {
-                result.append(character);
-            } else if (appendToArgs()) {
-                args.append(character);
-            }
-        }
-        checkState(toSubstitute);
-        return result.toString();
-    }
+		// reset stuff in case we hold state and the instance is reused
+		reset(true);
 
-    private void checkEndOfArgumentsState(final String toSubstitute) {
-        if (!isArgsStarted) {
-            throw new IllegalStateException(String.format("missing start '%s' for argument in string '%s'!",
-                    this.argsStart, toSubstitute));
-        }
+		final CharacterIterator it = new StringCharacterIterator(toSubstitute);
 
-    }
+		for (char character = it.first(); character != CharacterIterator.DONE; character = it.next()) {
+			if (isEndOfToken(character)) {
+				checkEndOfTokenState(toSubstitute);
+				isTokenStart = false;
+				result.append(evalToken());
+				reset(false);
+			} else if (isEndOfArguments(character)) {
+				checkEndOfArgumentsState(toSubstitute);
+				isArgsStarted = false;
+			} else if (isStartOfArguments(character)) {
+				isArgsStarted = true;
+			} else if (appendToToken()) {
+				token.append(character);
+			} else if (isStartOfToken(character)) {
+				isTokenStart = true;
+			} else if (appendToResult()) {
+				result.append(character);
+			} else if (appendToArgs()) {
+				args.append(character);
+			}
+		}
+		checkState(toSubstitute);
+		return result.toString();
+	}
 
-    private void checkState(final String toSubstitute) {
-        if (isTokenStart) {
-            throw new IllegalStateException(String.format("missing  end '%s' for token in string '%s'!", this.tokenEnd,
-                    toSubstitute));
-        }
-    }
+	protected void checkEndOfArgumentsState(final String toSubstitute) {
+		if (!isArgsStarted) {
+			throw new IllegalStateException(String.format("missing start '%s' for argument in string '%s'!",
+					this.argsStart, toSubstitute));
+		}
 
-    private void checkEndOfTokenState(final String toSubstitute) {
-        if (!isTokenStart) {
-            throw new IllegalStateException(String.format("missing start '%s' for token in string '%s'!",
-                    this.tokenStart, toSubstitute));
-        }
-    }
+	}
 
-    private boolean isStartOfToken(final char character) {
-        return tokenStart == character;
-    }
+	protected void checkState(final String toSubstitute) {
+		if (isTokenStart) {
+			throw new IllegalStateException(String.format("missing  end '%s' for token in string '%s'!", this.tokenEnd,
+					toSubstitute));
+		}
+	}
 
-    private boolean isStartOfArguments(final char character) {
-        return argsStart == character;
-    }
+	protected void checkEndOfTokenState(final String toSubstitute) {
+		if (!isTokenStart) {
+			throw new IllegalStateException(String.format("missing start '%s' for token in string '%s'!",
+					this.tokenStart, toSubstitute));
+		}
+	}
 
-    private boolean isEndOfArguments(final char character) {
-        return argsEnd == character;
-    }
+	protected boolean isStartOfToken(final char character) {
+		return tokenStart == character;
+	}
 
-    private boolean isEndOfToken(final char character) {
-        return tokenEnd == character;
-    }
+	protected boolean isStartOfArguments(final char character) {
+		return argsStart == character;
+	}
 
-    private String[] extractArgs(final String tokenName) {
-        final List<String> result = new ArrayList<String>();
-        checkArgumentLength(tokenName);
-        checkArgumentsAreValid(tokenName);
-        final StringTokenizer en = new StringTokenizer(this.args.toString(), String.valueOf(this.argsSep));
-        while (en.hasMoreTokens()) {
-            result.add(en.nextToken());
-        }
-        return result.toArray(new String[] {});
-    }
+	protected boolean isEndOfArguments(final char character) {
+		return argsEnd == character;
+	}
 
-    /**
-     * stuff like {dynamic(1,)} or {dynamic(1,2,)} seems to be invalid
-     */
-    private void checkArgumentsAreValid(final String tokenName) {
-        if (this.args.length() > 0 && this.args.length() % 2 == 0) {
-            throw new IllegalStateException(String.format(
-                    "the given arguments '%s' for token '%s' seem to be incorrect!", this.args.toString(), tokenName));
-        }
-    }
+	protected boolean isEndOfToken(final char character) {
+		return tokenEnd == character;
+	}
 
-    private void checkArgumentLength(final String tokenName) {
-        if (this.isArgsStarted && this.args.length() == 0) {
-            throw new IllegalStateException(String.format("the given arguments for token '%s' were empty!", tokenName));
-        }
-    }
+	protected String[] extractArgs(final String tokenName) {
+		final List<String> result = new ArrayList<String>();
+		checkArgumentLength(tokenName);
+		checkArgumentsAreValid(tokenName);
+		final StringTokenizer en = new StringTokenizer(this.args.toString(), String.valueOf(this.argsSep));
+		while (en.hasMoreTokens()) {
+			result.add(en.nextToken());
+		}
+		return result.toArray(new String[] {});
+	}
 
-    private boolean appendToArgs() {
-        return isArgsStarted;
-    }
+	/**
+	 * stuff like {dynamic(1,)} or {dynamic(1,2,)} seems to be invalid
+	 */
+	protected void checkArgumentsAreValid(final String tokenName) {
+		if (this.args.length() > 0 && this.args.length() % 2 == 0) {
+			throw new IllegalStateException(String.format(
+					"the given arguments '%s' for token '%s' seem to be incorrect!", this.args.toString(), tokenName));
+		}
+	}
 
-    private void reset(final boolean resetResult) {
-        this.isTokenStart = false;
-        this.isArgsStarted = false;
-        this.token = new StringBuffer();
-        this.args = new StringBuffer();
-        if (resetResult) {
-            this.result = new StringBuffer();
-        }
-    }
+	protected void checkArgumentLength(final String tokenName) {
+		if (this.isArgsStarted && this.args.length() == 0) {
+			throw new IllegalStateException(String.format("the given arguments for token '%s' were empty!", tokenName));
+		}
+	}
 
-    private String evalToken() {
-        String value = null;
-        final String tokenName = token.toString();
-        final String[] args = extractArgs(tokenName);
-        if (!tokens.containsKey(tokenName)) {
-            throw new IllegalStateException(String.format("no value or generator for token '%s' found!", tokenName));
-        }
-        final Generator generator = tokens.get(tokenName).getGenerator();
-        generator.inject(args);
-        value = generator.generate();
-        return value;
-    }
+	protected boolean appendToArgs() {
+		return isArgsStarted;
+	}
 
-    private boolean appendToToken() {
-        return isTokenStart && !isArgsStarted;
-    }
+	protected void reset(final boolean resetResult) {
+		this.isTokenStart = false;
+		this.isArgsStarted = false;
+		this.token = new StringBuilder();
+		this.args = new StringBuilder();
+		if (resetResult) {
+			this.result = new StringBuilder();
+		}
+	}
 
-    private boolean appendToResult() {
-        return !isTokenStart;
-    }
+	protected String evalToken() {
+		final String tokenName = this.token.toString();
+		final String[] args = extractArgs(tokenName);
+		if (!tokens.containsKey(tokenName)) {
+			if (ignoreMissingValues) {
+				return tokenWithPossibleArguments();
+			} else {
+				throw new IllegalStateException(String.format("no value or generator for token '%s' found!", tokenName));
+			}
+		}
+		return getGeneratorValue(tokenName, args);
+	}
 
-    @Override
-    public TokenReplacer register(final String token, final String value) {
-        Validate.notEmpty(token);
-        Validate.notNull(value);
-        this.register(new Token(token).replacedBy(value));
-        return this;
-    }
+	private String getGeneratorValue(final String tokenName, final String[] args) {
+		String value = null;
+		if (this.generatorCachingEnabled && this.generatorCache.containsKey(tokenName)) {
+			return this.generatorCache.get(tokenName);
+		}
+		final Generator generator = tokens.get(tokenName).getGenerator();
+		generator.inject(args);
+		value = generator.generate();
+		this.generatorCache.put(tokenName, value);
+		return value;
+	}
 
-    @Override
-    public TokenReplacer register(final Token token) {
-        Validate.notNull(token);
-        Validate.notNull(token.getGenerator(), "please specifiy a value or a generator for the token!");
-        this.tokens.put(token.getToken(), token);
-        return this;
-    }
+	private String tokenWithPossibleArguments() {
+		if (this.args.length() > 0) {
+			return this.tokenStart + this.token.toString() + this.argsStart + this.args + this.argsEnd + this.tokenEnd;
+		} else {
+			return this.tokenStart + this.token.toString() + this.tokenEnd;
+		}
+	}
 
-    @Override
-    public TokenReplacer withTokenStart(String tokenStart) {
-        ensureOneChar(tokenStart);
-        this.tokenStart = tokenStart.charAt(0);
-        return this;
-    }
+	protected boolean appendToToken() {
+		return isTokenStart && !isArgsStarted;
+	}
 
-    @Override
-    public TokenReplacer withTokenEnd(String tokenEnd) {
-        ensureOneChar(tokenEnd);
-        this.tokenEnd = tokenEnd.charAt(0);
-        return this;
-    }
+	protected boolean appendToResult() {
+		return !isTokenStart;
+	}
 
-    private void ensureOneChar(String character) {
-        if (character.length() != 1) {
-            throw new IllegalArgumentException(String.format("the given string '%s' must be exactly of size 1", character));
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public TokenReplacer register(final String token, final String value) {
+		Validate.notEmpty(token);
+		Validate.notNull(value);
+		this.register(new Token(token).replacedBy(value));
+		return this;
+	}
 
-    @Override
-    public TokenReplacer withArgumentDelimiter(String argsSep) {
-        ensureOneChar(argsSep);
-        this.argsSep = argsSep.charAt(0);
-        return this;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seede.marcelsauer.tokenreplacer.TokenReplacer#register(de.marcelsauer.
+	 * tokenreplacer.Token)
+	 */
+	@Override
+	public TokenReplacer register(final Token token) {
+		Validate.notNull(token);
+		Validate.notNull(token.getGenerator(), "please specifiy a value or a generator for the token!");
+		this.tokens.put(token.getToken(), token);
+		return this;
+	}
 
-    @Override
-    public TokenReplacer withArgumentStart(String argsStart) {
-        ensureOneChar(argsStart);
-        this.argsStart = argsStart.charAt(0);
-        return this;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String,
+	 * de.marcelsauer.tokenreplacer.Generator)
+	 */
+	@Override
+	public TokenReplacer register(String token, Generator generator) {
+		Validate.notEmpty(token);
+		Validate.notNull(generator);
+		return this.register(new Token(token).replacedBy(generator));
+	}
 
-    @Override
-    public TokenReplacer withArgumentEnd(String argsEnd) {
-        ensureOneChar(argsEnd);
-        this.argsEnd = argsEnd.charAt(0);
-        return this;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#withTokenStart(java.lang.String
+	 * )
+	 */
+	@Override
+	public TokenReplacer withTokenStart(String tokenStart) {
+		ensureOneChar(tokenStart);
+		this.tokenStart = tokenStart.charAt(0);
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#withTokenEnd(java.lang.String)
+	 */
+	@Override
+	public TokenReplacer withTokenEnd(String tokenEnd) {
+		ensureOneChar(tokenEnd);
+		this.tokenEnd = tokenEnd.charAt(0);
+		return this;
+	}
+
+	protected void ensureOneChar(String character) {
+		if (character.length() != 1) {
+			throw new IllegalArgumentException(String.format("the given string '%s' must be exactly of size 1",
+					character));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentDelimiter(java
+	 * .lang.String)
+	 */
+	@Override
+	public TokenReplacer withArgumentDelimiter(String argsSep) {
+		ensureOneChar(argsSep);
+		this.argsSep = argsSep.charAt(0);
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentStart(java.lang
+	 * .String)
+	 */
+	@Override
+	public TokenReplacer withArgumentStart(String argsStart) {
+		ensureOneChar(argsStart);
+		this.argsStart = argsStart.charAt(0);
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentEnd(java.lang.
+	 * String)
+	 */
+	@Override
+	public TokenReplacer withArgumentEnd(String argsEnd) {
+		ensureOneChar(argsEnd);
+		this.argsEnd = argsEnd.charAt(0);
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.marcelsauer.tokenreplacer.TokenReplacer#doNotIgnoreMissingValues()
+	 */
+	@Override
+	public TokenReplacer doNotIgnoreMissingValues() {
+		this.ignoreMissingValues = false;
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#ignoreMissingValues()
+	 */
+	@Override
+	public TokenReplacer ignoreMissingValues() {
+		this.ignoreMissingValues = true;
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#enableGeneratorCaching()
+	 */
+	@Override
+	public TokenReplacer enableGeneratorCaching() {
+		this.generatorCachingEnabled = true;
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#disableGeneratorCaching()
+	 */
+	@Override
+	public TokenReplacer disableGeneratorCaching() {
+		this.generatorCachingEnabled = false;
+		return this;
+	}
 
 }

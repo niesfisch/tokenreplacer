@@ -1,5 +1,3 @@
-package de.marcelsauer.tokenreplacer;
-
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT de>
  * 
@@ -17,12 +15,15 @@ package de.marcelsauer.tokenreplacer;
  * 
  * THIS CLASS IS NOT PART OF THE PUBLIC API!
  */
-public final class Constants {
+package de.marcelsauer.tokenreplacer;
 
-    public static final char DEFAULT_TOKEN_START = '{';
-    public static final char DEFAULT_TOKEN_END = '}';
-    public static final char DEFAULT_ARGS_SEPARATOR = ',';
-    public static final char DEFAULT_ARGS_START = '(';
-    public static final char DEFAULT_ARGS_END = ')';
-
+/**
+ * @author msauer
+ */
+final class Constants {
+	static final char DEFAULT_TOKEN_START = '{';
+	static final char DEFAULT_TOKEN_END = '}';
+	static final char DEFAULT_ARGS_SEPARATOR = ',';
+	static final char DEFAULT_ARGS_START = '(';
+	static final char DEFAULT_ARGS_END = ')';
 }

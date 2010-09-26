@@ -1,10 +1,3 @@
-package de.marcelsauer.tokenreplacer;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
  * de>
@@ -24,6 +17,18 @@ import org.junit.Test;
  * You should have received a copy of the GNU General Public License along with
  * Token Replacer. If not, see <http://www.gnu.org/licenses/>.
  */
+package de.marcelsauer.tokenreplacer;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Random;
+
+import org.junit.Test;
+
 public class TokyTest {
 
 	private TokenReplacer toky = new Toky();
@@ -34,12 +39,16 @@ public class TokyTest {
 
 	@Test
 	public void thatStaticValuesWork() {
+		toky.register("rand", "1234");
+		assertEquals("abc 1234 def", toky.substitute("abc {rand} def"));
+
 		toky.register(new Token("random").replacedBy("1234"));
 		assertEquals("abc 1234 def", toky.substitute("abc {random} def"));
 	}
 
 	@Test
 	public void thatGeneratedValuesWork() {
+		toky.register("random", new NumberGenerator());
 		toky.register(new Token("random").replacedBy(new NumberGenerator()));
 		toky.register(new Token("somechar").replacedBy(new SomeCharGenerator()));
 
@@ -80,6 +89,41 @@ public class TokyTest {
 	}
 
 	@Test
+	public void thatGeneratorCachingWorks() {
+		toky.register("nonCachingDefault", new Generator() {
+			Random rand = new Random();
+
+			@Override
+			public void inject(String[] args) {
+			}
+
+			@Override
+			public String generate() {
+				return String.valueOf(rand.nextInt());
+			}
+		});
+		// caching is disabled by default
+		String replacedFirst = toky.substitute("{nonCachingDefault}");
+		String replacedSecond = toky.substitute("{nonCachingDefault}");
+		assertTrue(replacedFirst != null && !"".equals(replacedFirst));
+		assertFalse(replacedFirst.equals(replacedSecond));
+
+		// enable
+		toky.enableGeneratorCaching();
+		replacedFirst = toky.substitute("{nonCachingDefault}");
+		replacedSecond = toky.substitute("{nonCachingDefault}");
+		assertTrue(replacedFirst.equals(replacedSecond));
+
+		// disable
+		toky.disableGeneratorCaching();
+		replacedFirst = toky.substitute("{nonCachingDefault}");
+		replacedSecond = toky.substitute("{nonCachingDefault}");
+		assertTrue(replacedFirst != null && !"".equals(replacedFirst));
+		assertFalse(replacedFirst.equals(replacedSecond));
+
+	}
+
+	@Test
 	public void thatAllFeaturesInOneWork() {
 		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
 		toky.register("static", "static value");
@@ -95,6 +139,7 @@ public class TokyTest {
 
 	@Test
 	public void thatInvalidEnclosingCharsResultInException() {
+		toky.doNotIgnoreMissingValues();
 		assertExceptedException("value}");
 		assertExceptedException("{value");
 		assertExceptedException("{value{");
@@ -104,7 +149,22 @@ public class TokyTest {
 
 	@Test
 	public void thatNoGeneratorOrValueResultsInException() {
+		toky.doNotIgnoreMissingValues();
 		assertExceptedException("{value}");
+	}
+
+	@Test
+	public void thatEmptyStringsToSubstituteWork() {
+		assertNull(toky.substitute(null));
+		assertEquals("", toky.substitute(""));
+	}
+
+	@Test
+	public void thatIgnoresMissingValuesWorksEvenIfValuesAreMissing() {
+		toky.ignoreMissingValues();
+		assertEquals("{willNotBeReplacedBecauseNotDefined}", toky.substitute("{willNotBeReplacedBecauseNotDefined}"));
+		assertEquals("{willNotBeReplacedBecauseNotDefined(1,2)}", toky
+				.substitute("{willNotBeReplacedBecauseNotDefined(1,2)}"));
 	}
 
 	@Test
@@ -121,7 +181,7 @@ public class TokyTest {
 			toky.substitute(toSubstitute);
 			fail(String.format("expected IllegalStateException to be thrown for token '%s'", toSubstitute));
 		} catch (IllegalStateException expected) {
-			//System.out.println("expected exception is: " + expected);
+			// System.out.println("expected exception is: " + expected);
 		}
 	}
 

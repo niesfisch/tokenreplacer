@@ -1,5 +1,3 @@
-package de.marcelsauer.tokenreplacer;
-
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT de>
  * 
@@ -15,92 +13,101 @@ package de.marcelsauer.tokenreplacer;
  * You should have received a copy of the GNU General Public License along with Token Replacer. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+package de.marcelsauer.tokenreplacer;
+
+/**
+ * TODO java doc
+ * @author msauer
+ * @see Toky
+ */
 public class Token {
 
-    private final String token;
-    private Generator generator;
-    private String fullToken;
+	private final String token;
+	private Generator generator;
+	private String fullToken;
 
-    /**
-     * @param token
-     *            e.g. {amount} -> 'amount' would be the token
-     */
-    public Token(String token) {
-        this.token = token;
-    }
+	/**
+	 * @param token
+	 *            e.g. {amount} -> 'amount' would be the token
+	 */
+	public Token(String token) {
+		Validate.notEmpty(token);
+		this.token = token;
+	}
 
-    /**
-     * @param value
-     *            the value to use for the token
-     * @return the {@link #Token} to allow method chaining
-     */
-    public Token replacedBy(final String value) {
-        this.generator = new Generator() {
+	/**
+	 * @param value
+	 *            the value to use for the token
+	 * @return the {@link #Token} to allow method chaining
+	 */
+	public Token replacedBy(final String value) {
+		Validate.notEmpty(value);
+		this.generator = new Generator() {
 
-            @Override
-            public String generate() {
-                return value;
-            }
+			@Override
+			public String generate() {
+				return value;
+			}
 
-            @Override
-            public void inject(String[] args) {
-                // no need here as we have a static value
-            }
-        };
-        return this;
-    }
+			@Override
+			public void inject(String[] args) {
+				// no need here as we have a static value
+			}
+		};
+		return this;
+	}
 
-    /**
-     * @return the {@link #Token}
-     */
-    public String getToken() {
-        return token;
-    }
+	/**
+	 * @return the {@link #Token}
+	 */
+	public String getToken() {
+		return token;
+	}
 
-    /**
-     * @param generator
-     *            the {@link #Generator} to use when replacing the value
-     * @return the {@link #Token} to allow method chaining
-     */
-    public Token replacedBy(Generator generator) {
-        this.generator = generator;
-        return this;
-    }
+	/**
+	 * @param generator
+	 *            the {@link #Generator} to use when replacing the value
+	 * @return the {@link #Token} to allow method chaining
+	 */
+	public Token replacedBy(Generator generator) {
+		this.generator = generator;
+		return this;
+	}
 
-    /**
-     * @return the {@link #Generator} associated with the {@link #Token}
-     */
-    public Generator getGenerator() {
-        return generator;
-    }
+	/**
+	 * @return the {@link #Generator} associated with the {@link #Token}
+	 */
+	public Generator getGenerator() {
+		return generator;
+	}
 
-    @Override
-    public String toString() {
-        return "Token [fullToken=" + fullToken + ", generator=" + generator + ", token=" + token + "]";
-    }
+	@Override
+	public String toString() {
+		return "Token [fullToken=" + fullToken + ", generator=" + generator + ", token=" + token + "]";
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((token == null) ? 0 : token.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((token == null) ? 0 : token.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Token other = (Token) obj;
-        if (token == null) {
-            if (other.token != null)
-                return false;
-        } else if (!token.equals(other.token))
-            return false;
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Token other = (Token) obj;
+		if (token == null) {
+			if (other.token != null)
+				return false;
+		} else if (!token.equals(other.token))
+			return false;
+		return true;
+	}
 }

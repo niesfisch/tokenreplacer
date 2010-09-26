@@ -1,5 +1,3 @@
-package de.marcelsauer.tokenreplacer;
-
 /**
  * Token Replacer Copyright (C) 2010 Marcel Sauer <marcel DOT sauer AT gmx DOT
  * de>
@@ -19,9 +17,14 @@ package de.marcelsauer.tokenreplacer;
  * You should have received a copy of the GNU General Public License along with
  * Token Replacer. If not, see <http://www.gnu.org/licenses/>.
  */
-public final class Utils {
-	public static String join(String[] s, String delimiter) {
-		StringBuffer buffer = new StringBuffer();
+package de.marcelsauer.tokenreplacer;
+
+/**
+ * @author msauer
+ */
+final class Utils {
+	static String join(String[] s, String delimiter) {
+		StringBuilder buffer = new StringBuilder();
 		for (String part : s) {
 			buffer.append(part);
 			buffer.append(delimiter);
