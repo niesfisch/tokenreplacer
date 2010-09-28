@@ -132,6 +132,7 @@ public class TokyTest {
 		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
 		assertEquals("110", toky.substitute("{dynamicValue(1,10)}"));
 		assertEquals("101", toky.substitute("{dynamicValue(10,1)}"));
+		assertEquals("aaabbbccc", toky.substitute("{dynamicValue(aaa,bbb,ccc)}"));
 	}
 	
 	@Test
