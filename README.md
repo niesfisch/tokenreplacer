@@ -13,7 +13,7 @@ either via Maven
     <dependency>
         <groupId>de.marcelsauer</groupId>
         <artifactId>tokenreplacer</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </dependency>
 
 or just take the jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
@@ -115,6 +115,10 @@ toky.disableGeneratorCaching();
 ## More Samples
 
 Have a look at [the unit test of Toky](http://github.com/niesfisch/tokenreplacer/blob/master/src/test/java/de/marcelsauer/tokenreplacer/TokyTest.java) to see some more samples
+
+## Release Notes
+
+[Release Notes](http://github.com/niesfisch/tokenreplacer/blob/master/releasenotes.txt)
 
 ## peeking into the source code and building from scratch
 
