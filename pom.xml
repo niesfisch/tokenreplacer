@@ -67,6 +67,11 @@
 					<aggregate>true</aggregate>
 					<failIfMissing>true</failIfMissing>
 					<encoding>UTF-8</encoding>
+					<excludes>
+						<exclude>target/**</exclude>
+						<exclude>releasenotes.txt</exclude>
+					</excludes>
+
 				</configuration>
 				<executions>
 					<execution>
