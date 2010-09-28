@@ -1,4 +1,4 @@
-[current]
+Release 1.1 (2010-09-28)
 
 New Features
 ------------------
