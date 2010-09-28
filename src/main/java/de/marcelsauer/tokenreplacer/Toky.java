@@ -25,7 +25,7 @@ package de.marcelsauer.tokenreplacer;
  * 
  * <p>
  * simplest use case, only <b>static values</b>
- * <p>
+ * </p>
  * 
  * <pre>
  * TokenReplacer toky = new Toky().register(&quot;number&quot;, &quot;123&quot;);
@@ -44,7 +44,7 @@ package de.marcelsauer.tokenreplacer;
  * <p>
  * we can also use a <b>{@link Generator}</b> to <b>dynamically</b> get the
  * value (which here does not really make sense ;-)
- * <p>
+ * </p>
  * 
  * <pre>
  * toky = new Toky().register(new Token(&quot;number&quot;).replacedBy(new Generator() {
@@ -75,7 +75,7 @@ package de.marcelsauer.tokenreplacer;
  * <p>
  * of course you can replace all default <b>delimiters</b> with you preferred
  * ones, just make sure start and end are different
- * <p>
+ * </p>
  * 
  * <pre>
  * toky.withTokenStart(&quot;*&quot;); // default is '{'
