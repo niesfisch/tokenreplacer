@@ -128,6 +128,13 @@ public class TokyTest {
 	}
 
 	@Test
+	public void thatMoreThanOneCharArgumentsWork() {
+		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
+		assertEquals("110", toky.substitute("{dynamicValue(1,10)}"));
+		assertEquals("101", toky.substitute("{dynamicValue(10,1)}"));
+	}
+	
+	@Test
 	public void thatAllFeaturesInOneWork() {
 		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
 		toky.register("static", "static value");
@@ -136,9 +143,9 @@ public class TokyTest {
 		toky.withArgumentDelimiter(";");
 		toky.withArgumentStart("[");
 		toky.withArgumentEnd("]");
-
+		
 		toky.register("theToken", "abc");
-		assertEquals("a b c 123 static value +++", toky.substitute("a b c *dynamicValue[1;2;3]# *static# +++"));
+		assertEquals("a b c 1x2y3z static value +++", toky.substitute("a b c *dynamicValue[1x;2y;3z]# *static# +++"));
 	}
 
 	@Test
@@ -178,6 +185,8 @@ public class TokyTest {
 		assertExceptedException("{value(}");
 		assertExceptedException("{value(1,)}");
 		assertExceptedException("{value(1,2,)}");
+		assertExceptedException("{value(,)}");
+		assertExceptedException("{value(,,)}");
 	}
 
 	private void assertExceptedException(String toSubstitute) {
@@ -185,7 +194,7 @@ public class TokyTest {
 			toky.substitute(toSubstitute);
 			fail(String.format("expected IllegalStateException to be thrown for token '%s'", toSubstitute));
 		} catch (IllegalStateException expected) {
-			// System.out.println("expected exception is: " + expected);
+			System.out.println("expected exception is: " + expected);
 		}
 	}
 

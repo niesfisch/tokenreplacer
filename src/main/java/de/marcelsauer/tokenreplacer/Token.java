@@ -17,6 +17,7 @@ package de.marcelsauer.tokenreplacer;
 
 /**
  * TODO java doc
+ * 
  * @author msauer
  * @see Toky
  */
@@ -28,7 +29,8 @@ public class Token {
 
 	/**
 	 * @param token
-	 *            e.g. {amount} -> 'amount' would be the token, must not be null or empty
+	 *            e.g. {amount} -> 'amount' would be the token, must not be null
+	 *            or empty
 	 */
 	public Token(String token) {
 		Validate.notEmpty(token);
@@ -37,7 +39,10 @@ public class Token {
 
 	/**
 	 * @param value
-	 *            the value to use for the token, must not be null or empty
+	 *            the static value to use for the token. if you want to
+	 *            dynamically generate a value (and possibly supply arguments)
+	 *            then use {@link #replacedBy(Generator).}. must not be null or
+	 *            empty
 	 * @return the {@link #Token} to allow method chaining
 	 */
 	public Token replacedBy(final String value) {
@@ -66,7 +71,9 @@ public class Token {
 
 	/**
 	 * @param generator
-	 *            the {@link #Generator} to use when replacing the value, must not be null
+	 *            the {@link #Generator} to use when replacing the value. if you
+	 *            only have a static value (something constant) than you can also use
+	 *            {@link #replacedBy(String)}. must not be null
 	 * @return the {@link #Token} to allow method chaining
 	 */
 	public Token replacedBy(Generator generator) {
@@ -75,7 +82,7 @@ public class Token {
 	}
 
 	/**
-	 * @return the {@link #Generator} associated with the {@link #Token}
+	 * @return the {@link #Generator} associated with the {@link #Token}. can be null
 	 */
 	public Generator getGenerator() {
 		return generator;

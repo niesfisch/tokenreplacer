@@ -171,7 +171,7 @@ public class CharSequenceTokenReplacer implements TokenReplacer {
 	 * stuff like {dynamic(1,)} or {dynamic(1,2,)} seems to be invalid
 	 */
 	protected void checkArgumentsAreValid(final String tokenName) {
-		if (this.args.length() > 0 && this.args.length() % 2 == 0) {
+		if (this.args.length() > 0 && (this.args.toString().matches("^,.*") || this.args.toString().matches(".*,$"))) {
 			throw new IllegalStateException(String.format(
 					"the given arguments '%s' for token '%s' seem to be incorrect!", this.args.toString(), tokenName));
 		}
