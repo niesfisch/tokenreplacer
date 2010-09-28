@@ -3,3 +3,4 @@ target
 release.properties
 pom.xml.releaseBackup
 releases
+release.log
