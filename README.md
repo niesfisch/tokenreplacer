@@ -16,7 +16,7 @@ either via Maven
         <version>1.0</version>
     </dependency>
 
-or just take the jar from the "downloads" section and put it in you classpath.
+or just take the jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
         
 ## Usage
 
@@ -110,6 +110,7 @@ subsequent tokens with the same name
 toky.enableGeneratorCaching();
 toky.disableGeneratorCaching();
 </pre>
+
 
 ## More Samples
 
