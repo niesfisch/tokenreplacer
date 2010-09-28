@@ -35,11 +35,12 @@ public interface TokenReplacer {
 	 * <ul>
 	 * 
 	 * @param toSubstitute
-	 *            the string that contains the tokens, will be returned as is in
+	 *            the string that contains the tokens, will be returned as-is in
 	 *            case of null or empty string
 	 * @return the result after replacing all tokens with the proper values
 	 * @throws IllegalStateException
-	 *             when the internal state is incorrect
+	 *             when the internal state is incorrect and error reporting was
+	 *             turned on via {@link #doNotIgnoreMissingValues()}
 	 */
 	String substitute(final String toSubstitute);
 
@@ -51,9 +52,10 @@ public interface TokenReplacer {
 	 * 
 	 * @param token
 	 *            the name of the token to be replaced e.g. for ${date} ->
-	 *            "date" would be the token
+	 *            "date" would be the token, must not be null or empty
 	 * @param value
-	 *            the static value that will be used when replacing the token
+	 *            the static value that will be used when replacing the token,
+	 *            must not be null or empty
 	 * @return the {@link TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer register(String token, String value);
@@ -62,7 +64,10 @@ public interface TokenReplacer {
 	 * registers a {@link Token} that needs to be replaced.
 	 * 
 	 * @param token
-	 *            the {@link Token}
+	 *            the {@link Token}, must not be null, the token must have a
+	 *            valid value or generator associated with it which was set via
+	 *            {@link Token#replacedBy(String)} or
+	 *            {@link Token#replacedBy(String)}
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer register(Token token);
@@ -75,9 +80,10 @@ public interface TokenReplacer {
 	 * 
 	 * @param token
 	 *            the name of the token to be replaced e.g. for ${date} ->
-	 *            "date" would be the token
+	 *            "date" would be the token, must not be null or empty
 	 * @param generator
-	 *            the {@link #Generator} to use when replacing the value
+	 *            the {@link #Generator} to use when replacing the value, must
+	 *            not be null or empty
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer register(String token, Generator Generator);
@@ -85,7 +91,8 @@ public interface TokenReplacer {
 	/**
 	 * @param tokenStart
 	 *            sets the token start identifier to the given value e.g.
-	 *            [dynamic] -> '[' would be the start identifier, e.g. '['
+	 *            [dynamic] -> '[' would be the start identifier, e.g. '[', must
+	 *            not be null or empty
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer withTokenStart(String tokenStart);
@@ -93,7 +100,8 @@ public interface TokenReplacer {
 	/**
 	 * @param tokenEnd
 	 *            sets the token end identifier to the given value e.g.
-	 *            [dynamic] -> ']' would be the end identifier, e.g. '['
+	 *            [dynamic] -> ']' would be the end identifier, e.g. '[', must
+	 *            not be null or empty
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer withTokenEnd(String tokenEnd);
@@ -101,7 +109,8 @@ public interface TokenReplacer {
 	/**
 	 * @param argsSep
 	 *            changes the delimiter of the arguments to the given value e.g.
-	 *            {dynamic(1;2;3)} -> ';' would be the delimiter
+	 *            {dynamic(1;2;3)} -> ';' would be the delimiter, must not be
+	 *            null or empty
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer withArgumentDelimiter(String argsSep);
@@ -109,7 +118,8 @@ public interface TokenReplacer {
 	/**
 	 * @param argsStart
 	 *            sets the argument start identifier to the given value e.g.
-	 *            {dynamic[1;2;3]} -> '[' would be the delimiter e.g. '['
+	 *            {dynamic[1;2;3]} -> '[' would be the delimiter e.g. '[', must
+	 *            not be null or empty
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer withArgumentStart(String argsStart);
@@ -117,7 +127,8 @@ public interface TokenReplacer {
 	/**
 	 * @param argsEnd
 	 *            sets the argument end identifier to the given value e.g.
-	 *            {dynamic[1;2;3]} -> ']' would be the delimiter e.g. ']'
+	 *            {dynamic[1;2;3]} -> ']' would be the delimiter e.g. ']', must
+	 *            not be null or empty
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer withArgumentEnd(String argsEnd);

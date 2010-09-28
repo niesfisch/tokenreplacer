@@ -29,6 +29,10 @@ import java.util.Random;
 
 import org.junit.Test;
 
+/**
+ * @author msauer
+ *
+ */
 public class TokyTest {
 
 	private TokenReplacer toky = new Toky();

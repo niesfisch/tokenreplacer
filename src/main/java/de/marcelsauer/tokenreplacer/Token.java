@@ -28,7 +28,7 @@ public class Token {
 
 	/**
 	 * @param token
-	 *            e.g. {amount} -> 'amount' would be the token
+	 *            e.g. {amount} -> 'amount' would be the token, must not be null or empty
 	 */
 	public Token(String token) {
 		Validate.notEmpty(token);
@@ -37,7 +37,7 @@ public class Token {
 
 	/**
 	 * @param value
-	 *            the value to use for the token
+	 *            the value to use for the token, must not be null or empty
 	 * @return the {@link #Token} to allow method chaining
 	 */
 	public Token replacedBy(final String value) {
@@ -66,7 +66,7 @@ public class Token {
 
 	/**
 	 * @param generator
-	 *            the {@link #Generator} to use when replacing the value
+	 *            the {@link #Generator} to use when replacing the value, must not be null
 	 * @return the {@link #Token} to allow method chaining
 	 */
 	public Token replacedBy(Generator generator) {

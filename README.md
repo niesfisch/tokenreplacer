@@ -6,6 +6,18 @@ You can replace tokens with simple static strings or strings generated "on-the-f
 
 You can even pass arguments to the generator which makes it pretty powerful.
 
+## Getting the Jar File
+
+either via Maven
+
+    <dependency>
+        <groupId>de.marcelsauer</groupId>
+        <artifactId>tokenreplacer</artifactId>
+        <version>1.0</version>
+    </dependency>
+
+or just take the jar from the "downloads" section and put it in you classpath.
+        
 ## Usage
 
 <p>

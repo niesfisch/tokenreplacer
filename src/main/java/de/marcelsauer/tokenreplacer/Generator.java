@@ -22,7 +22,7 @@ package de.marcelsauer.tokenreplacer;
 public interface Generator {
 
 	/**
-	 * @return the generated String that will be used to replace a token
+	 * @return the generated String that will be used to replace a {@link Token}
 	 */
 	String generate();
 

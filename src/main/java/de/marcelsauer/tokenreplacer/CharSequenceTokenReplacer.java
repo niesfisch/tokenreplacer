@@ -32,7 +32,8 @@ import java.util.StringTokenizer;
  * parser implementation based on {@link CharacterIterator} and
  * {@link StringCharacterIterator}
  * 
- * NOT PART OF THE PUBLIC API!
+ * NOT PART OF THE PUBLIC API! STILL HERE AND PUBLIC IN CASE YOU NEED TO
+ * 'EMERGENCY' SUBCLASS.
  * 
  * @author msauer
  */
