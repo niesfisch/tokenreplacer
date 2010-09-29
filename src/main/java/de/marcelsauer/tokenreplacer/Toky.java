@@ -73,8 +73,8 @@ package de.marcelsauer.tokenreplacer;
  * </pre>
  * 
  * <p>
- * of course you can replace all default <b>delimiters</b> with you preferred
- * ones, just make sure start and end are different
+ * of course you can replace all default <b>delimiters</b> with your preferred
+ * ones, just make sure start and end are different.
  * </p>
  * 
  * <pre>
