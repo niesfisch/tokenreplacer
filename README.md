@@ -17,6 +17,10 @@ either via Maven
     </dependency>
 
 or just take the jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
+
+## Licence
+
+Apache 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt
         
 ## Usage
 

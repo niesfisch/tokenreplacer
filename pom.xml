@@ -20,6 +20,22 @@
 			<email>marcel (dot) sauer (at) gmx (dot) de</email>
 		</developer>
 	</developers>
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:niesfisch/tokenreplacer.git
+        </connection>
+		<url>scm:git:git@github.com:niesfisch/tokenreplacer.git</url>
+		<developerConnection>scm:git:git@github.com:niesfisch/tokenreplacer.git
+        </developerConnection>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,22 +103,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<licenses>
-		<license>
-			<name>The GNU General Public License, Version 3</name>
-			<url>http://www.gnu.org/licenses/gpl-3.0.html</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<scm>
-		<connection>scm:git:git@github.com:niesfisch/tokenreplacer.git
-		</connection>
-		<url>scm:git:git@github.com:niesfisch/tokenreplacer.git</url>
-		<developerConnection>scm:git:git@github.com:niesfisch/tokenreplacer.git
-		</developerConnection>
-	</scm>
-
 	<distributionManagement>
 		<snapshotRepository>
 			<id>sonatype-nexus-snapshots</id>

@@ -1,3 +1,11 @@
+Release 1.2 (2010-09-29)
+
+CHANGED LICENCE FROM GPL 3.0 to APACHE 2.0
+
+Improvements
+------------------
+- now Token#replacedBy(String value) accepts an "" empty String as argument
+
 Release 1.1 (2010-09-28)
 
 New Features
@@ -12,7 +20,6 @@ Improvements
 ------------------
 - enhanced java doc
 - using StringBuilder instead of StringBuffer for internal result buffer(s)
-
 
 Bug Fixes
 ------------------
