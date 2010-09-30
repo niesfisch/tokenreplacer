@@ -13,7 +13,7 @@ either via Maven
     <dependency>
         <groupId>de.marcelsauer</groupId>
         <artifactId>tokenreplacer</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </dependency>
 
 or just take the jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
