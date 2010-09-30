@@ -20,7 +20,9 @@ or just take the jar from the [downloads](http://github.com/niesfisch/tokenrepla
 
 ## Licence
 
-Apache 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt
+Version >= 1.2 -> Apache 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt
+
+Version <= 1.1 -> GPL 3
         
 ## Usage
 
