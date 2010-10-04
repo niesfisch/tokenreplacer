@@ -1,26 +1,26 @@
-Release 1.2 (2010-09-29)
+*** Release 1.2 (2010-09-29)
 
 CHANGED LICENCE FROM GPL 3.0 to APACHE 2.0 !
 
 Bug Fixes
 ------------------
-fixed ISSUE-1 http://github.com/niesfisch/tokenreplacer/issues#issue/1
+- fixed ISSUE-1 http://github.com/niesfisch/tokenreplacer/issues#issue/1
 - now Token#replacedBy(String value) accepts an "" empty String as argument
 
-Release 1.1 (2010-09-28)
+*** Release 1.1 (2010-09-28)
 
 New Features
 ------------------
-- new method TokenReplacer register(String, Generator) in TokenReplacer interface
-- new method TokenReplacer doNotIgnoreMissingValues() in TokenReplacer interface
-- new method TokenReplacer ignoreMissingValues() in TokenReplacer interface
-- new method enableGeneratorCaching() in TokenReplacer interface
-- new method disableGeneratorCaching() in TokenReplacer interface
++ new method TokenReplacer register(String, Generator) in TokenReplacer interface
++ new method TokenReplacer doNotIgnoreMissingValues() in TokenReplacer interface
++ new method TokenReplacer ignoreMissingValues() in TokenReplacer interface
++ new method enableGeneratorCaching() in TokenReplacer interface
++ new method disableGeneratorCaching() in TokenReplacer interface
 
 Improvements
 ------------------
-- enhanced java doc
-- using StringBuilder instead of StringBuffer for internal result buffer(s)
++ enhanced java doc
++ using StringBuilder instead of StringBuffer for internal result buffer(s)
 
 Bug Fixes
 ------------------
@@ -28,4 +28,6 @@ Bug Fixes
 
 
 Release 1.0 (2010-09-22)
-- initial release 1.0
+************************
++ initial release 1.0
+
