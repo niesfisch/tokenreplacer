@@ -32,9 +32,9 @@ You can even pass arguments to the generator which makes it pretty powerful.
         
         @Override
         public String generate() {
-            return args[0]; // some very sophisticated stuff happens here :)
+            return args[0] + args[1] + args[2]; // some very sophisticated stuff happens here :)
         }
-     })).substitute("i can count to {number(123)}");
+     })).substitute("i can count to {number(1,2,3)}");
      
 ## Getting the Jar File
 
