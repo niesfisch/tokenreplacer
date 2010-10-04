@@ -4,11 +4,11 @@ Token Replacer is a simple and small Java Library that helps replacing tokens in
 
 You can replace tokens with simple static strings
 
-    e.g. String result = new Toky().register("number", "123").substitute("i can count to {number}");
+    String result = new Toky().register("number", "123").substitute("i can count to {number}");
 
 or strings generated "on-the-fly". 
 
-    e.g. String result = new Toky().register(new Token("number").replacedBy(new Generator() {
+    String result = new Toky().register(new Token("number").replacedBy(new Generator() {
     
         @Override
         public void inject(String[] args) {
@@ -23,7 +23,7 @@ or strings generated "on-the-fly".
 
 You can even pass arguments to the generator which makes it pretty powerful.
 
-    e.g. String result = new Toky().register(new Token("number").replacedBy(new Generator() {
+    String result = new Toky().register(new Token("number").replacedBy(new Generator() {
     
         @Override
         public void inject(String[] args) {
