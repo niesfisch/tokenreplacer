@@ -1,4 +1,3 @@
-kkk
 # What's that for? 
 
 Token Replacer is a simple and small Java Library that helps replacing tokens in strings.
