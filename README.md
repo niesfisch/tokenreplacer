@@ -1,12 +1,41 @@
 # What's that for? 
----
 
 Token Replacer is a simple and small Java Library that helps replacing tokens in strings.
 
-You can replace tokens with simple static strings or strings generated "on-the-fly". 
+You can replace tokens with simple static strings
+
+    e.g. String result = new Toky().register("number", "123").substitute("i can count to {number}");
+
+or strings generated "on-the-fly". 
+
+    e.g. String result = new Toky().register(new Token("number").replacedBy(new Generator() {
+    
+        @Override
+        public void inject(String[] args) {
+            // store the arguments
+        }
+        
+        @Override
+        public String generate() {
+            return "123"; // some very sophisticated stuff happens here :)
+        }
+     })).substitute("i can count to {number}";
 
 You can even pass arguments to the generator which makes it pretty powerful.
 
+    e.g. String result = new Toky().register(new Token("number").replacedBy(new Generator() {
+    
+        @Override
+        public void inject(String[] args) {
+            // store the arguments
+        }
+        
+        @Override
+        public String generate() {
+            return args[0]; // some very sophisticated stuff happens here :)
+        }
+     })).substitute("i can count to {number(123)}");
+     
 ## Getting the Jar File
 
 either via Maven
@@ -17,13 +46,17 @@ either via Maven
         <version>1.2</version>
     </dependency>
 
-or just take the jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
+or just take the latest jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
 
 ## Licence
 
 Version >= 1.2 -> Apache 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt
 
 Version <= 1.1 -> GPL 3
+
+## Release Notes
+
+[Release Notes](http://github.com/niesfisch/tokenreplacer/blob/master/releasenotes.txt)
         
 ## Usage
 
@@ -122,10 +155,6 @@ toky.disableGeneratorCaching();
 ## More Samples
 
 Have a look at [the unit test of Toky](http://github.com/niesfisch/tokenreplacer/blob/master/src/test/java/de/marcelsauer/tokenreplacer/TokyTest.java) to see some more samples
-
-## Release Notes
-
-[Release Notes](http://github.com/niesfisch/tokenreplacer/blob/master/releasenotes.txt)
 
 ## peeking into the source code and building from scratch
 
