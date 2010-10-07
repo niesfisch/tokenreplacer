@@ -4,7 +4,7 @@ CHANGED LICENCE FROM GPL 3.0 to APACHE 2.0 !
 
 Bug Fixes
 ------------------
-- fixed ISSUE-1 http://github.com/niesfisch/tokenreplacer/issues#issue/1
+- fixed BUG-1 http://github.com/niesfisch/tokenreplacer/issues#issue/1
 - now Token#replacedBy(String value) accepts an "" empty String as argument
 
 *** Release 1.1 (2010-09-28)
@@ -25,7 +25,6 @@ Improvements
 Bug Fixes
 ------------------
 - now correctly checking arguments that are greater than one, e.g. {token(1,10)} -> resulted in exception (incorrect use of % modulo), now fixed
-
 
 Release 1.0 (2010-09-22)
 ************************
