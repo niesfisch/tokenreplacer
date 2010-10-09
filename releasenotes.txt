@@ -2,7 +2,9 @@
 
 New Features
 ------------------
-+ new method TokenReplacer register(String[] replacements);
++ implemented FR-1 http://github.com/niesfisch/tokenreplacer/issues#issue/2
+++ new method TokenReplacer register(String[] replacements);
+
 
 *** Release 1.2 (2010-09-29)
 
@@ -11,7 +13,7 @@ CHANGED LICENCE FROM GPL 3.0 to APACHE 2.0 !
 Bug Fixes
 ------------------
 - fixed BUG-1 http://github.com/niesfisch/tokenreplacer/issues#issue/1
-- now Token#replacedBy(String value) accepts an "" empty String as argument
+-- now Token#replacedBy(String value) accepts an "" empty String as argument
 
 *** Release 1.1 (2010-09-28)
 
