@@ -16,6 +16,8 @@
 
 package de.marcelsauer.tokenreplacer;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author msauer
  * @see Toky
@@ -84,6 +86,24 @@ public interface TokenReplacer {
 	 * @return the {@link #TokenReplacer} to allow method chaining
 	 */
 	TokenReplacer register(String token, Generator Generator);
+
+	/**
+	 * registers an array of replacements for a string based in indexed tokens.
+	 * the tokens will be replaced in the order they were added to the array.
+	 * 
+	 * e.g.
+	 * 
+	 * <pre>
+	 * toky.register(new String[] { "one", "two", "three" });
+	 * toky.substitute("{0} {1} {2}")); // will result in "one two three"
+	 * </pre>
+	 * 
+	 * @param replacements
+	 *            the array of replacements that will be used when replacing an
+	 *            indexed strings, must not be null but can be empty
+	 * @return the {@link #TokenReplacer} to allow method chaining
+	 */
+	TokenReplacer register(String[] replacements);
 
 	/**
 	 * @param tokenStart

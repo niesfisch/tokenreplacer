@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * @author msauer
- *
+ * 
  */
 public class TokyTest {
 
@@ -57,6 +57,23 @@ public class TokyTest {
 		assertEquals("abc 98765", toky.substitute("{somechar} {random}"));
 		assertEquals("9876598765", toky.substitute("{random}{random}"));
 		assertEquals("... 98765 98765    ", toky.substitute("... {random} {random}    "));
+	}
+
+	@Test
+	public void thatReplacementArraysWork() {
+		toky.register(new String[] { "one" }).ignoreMissingValues();
+		assertEquals("abc one {1} {2} def", toky.substitute("abc {0} {1} {2} def"));
+		
+		toky.register(new String[] { "", " " });
+		assertEquals("abc    {2} def", toky.substitute("abc {0} {1} {2} def"));
+		
+		toky.register(new String[] {});
+		assertEquals("xxx", toky.substitute("xxx"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void thatNullReplacementArraysThrowException() {
+		toky.register((String[]) null);
 	}
 
 	@Test
@@ -131,7 +148,7 @@ public class TokyTest {
 		assertEquals("101", toky.substitute("{dynamicValue(10,1)}"));
 		assertEquals("aaabbbccc", toky.substitute("{dynamicValue(aaa,bbb,ccc)}"));
 	}
-	
+
 	@Test
 	public void thatAllFeaturesInOneWork() {
 		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
@@ -141,7 +158,7 @@ public class TokyTest {
 		toky.withArgumentDelimiter(";");
 		toky.withArgumentStart("[");
 		toky.withArgumentEnd("]");
-		
+
 		toky.register("theToken", "abc");
 		assertEquals("a b c 1x2y3z static value +++", toky.substitute("a b c *dynamicValue[1x;2y;3z]# *static# +++"));
 	}
@@ -192,7 +209,7 @@ public class TokyTest {
 			toky.substitute(toSubstitute);
 			fail(String.format("expected IllegalStateException to be thrown for token '%s'", toSubstitute));
 		} catch (IllegalStateException expected) {
-			//System.out.println("expected exception is: " + expected);
+			// System.out.println("expected exception is: " + expected);
 		}
 	}
 

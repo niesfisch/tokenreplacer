@@ -398,4 +398,18 @@ public class CharSequenceTokenReplacer implements TokenReplacer {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String[])
+	 */
+	@Override
+	public TokenReplacer register(String[] replacements) {
+		Validate.notNull(replacements);
+		int i = 0;
+		for (String replacement : replacements) {
+			this.register(new Token(String.valueOf(i)).replacedBy(replacement));
+			i++;
+		}
+		return this;
+	}
+
 }

@@ -16,6 +16,8 @@
 
 package de.marcelsauer.tokenreplacer;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * <p>
  * Toky is a token replacer for Strings. It will replace the found token with a
@@ -73,6 +75,13 @@ package de.marcelsauer.tokenreplacer;
  * toky.substitute(&quot;i can count to {number(a,b,c)}&quot;);
  * </pre>
  * 
+ * if you prefer to use <b>index based tokens</b>, you can also use this:
+ * 
+ * <pre>
+ * toky.register(new String[] { &quot;one&quot;, &quot;two&quot;, &quot;three&quot; });
+ * toky.substitute(&quot;abc {0} {1} {2} def&quot;)); // will produce &quot;abc one two three def&quot;
+ * </pre>
+ * 
  * <p>
  * of course you can replace all default <b>delimiters</b> with your preferred
  * ones, just make sure start and end are different.
@@ -108,9 +117,11 @@ package de.marcelsauer.tokenreplacer;
  * you can <b>enable/disable generator caching</b>. if you enable caching once a
  * generator for a token returned a value this value will be used for all
  * subsequent tokens with the same name otherwise the generator will be called
- * once for every token. <br/><br/>
+ * once for every token. <br/>
+ * <br/>
  * 
- * e.g. {counter}{counter}{counter}<br/><br/>
+ * e.g. {counter}{counter}{counter}<br/>
+ * <br/>
  * 
  * with a registered generator will result in 3 calls to the generator
  * (resulting in poorer performance). so, if you know your generator will always
@@ -298,6 +309,14 @@ public class Toky implements TokenReplacer {
 	@Override
 	public TokenReplacer disableGeneratorCaching() {
 		return impl.disableGeneratorCaching();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String[])
+	 */
+	@Override
+	public TokenReplacer register(String[] replacements) {
+		return impl.register(replacements);
 	}
 
 }

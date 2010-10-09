@@ -1,3 +1,9 @@
+*** Release 1.3 (2010-10-09)
+
+New Features
+------------------
++ new method TokenReplacer register(String[] replacements);
+
 *** Release 1.2 (2010-09-29)
 
 CHANGED LICENCE FROM GPL 3.0 to APACHE 2.0 !

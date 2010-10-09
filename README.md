@@ -109,6 +109,13 @@ because you can write very dynamic generators.
 toky.substitute(&quot;i can count to {number(a,b,c)}&quot;);
 </pre>
 
+if you prefer to use <b>index based tokens</b>, you can also use this:
+ 
+<pre>
+toky.register(new String[] { &quot;one&quot;, &quot;two&quot;, &quot;three&quot; });
+toky.substitute(&quot;abc {0} {1} {2} def&quot;)); // will produce &quot;abc one two three def&quot;
+</pre>
+ 
 <p>
 of course you can replace all default <b>delimiters</b> with your preferred
 ones, just make sure start and end are different.
