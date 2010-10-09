@@ -35,7 +35,14 @@ You can even pass arguments to the generator which makes it pretty powerful:
             return args[0] + args[1] + args[2]; // some very sophisticated stuff happens here :)
         }
      })).substitute("i can count to {number(1,2,3)}");
-     
+
+If you prefer to use <b>index based tokens</b>, you can also use this:
+ 
+<pre>
+toky.register(new String[] { &quot;one&quot;, &quot;two&quot;, &quot;three&quot; });
+toky.substitute(&quot;abc {0} {1} {2} def&quot;)); // will produce &quot;abc one two three def&quot;
+</pre>
+   
 ## Getting the Jar File
 
 either via Maven
