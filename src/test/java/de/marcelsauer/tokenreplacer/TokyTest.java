@@ -63,12 +63,15 @@ public class TokyTest {
 	public void thatReplacementArraysWork() {
 		toky.register(new String[] { "one" }).ignoreMissingValues();
 		assertEquals("abc one {1} {2} def", toky.substitute("abc {0} {1} {2} def"));
-		
+
 		toky.register(new String[] { "", " " });
 		assertEquals("abc    {2} def", toky.substitute("abc {0} {1} {2} def"));
-		
+
 		toky.register(new String[] {});
 		assertEquals("xxx", toky.substitute("xxx"));
+
+		toky.register(new String[] { "one" });
+		assertEquals("oneoneone", toky.substitute("{0}{0}{0}"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
