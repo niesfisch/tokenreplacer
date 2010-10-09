@@ -3,7 +3,7 @@
 
 	<groupId>de.marcelsauer</groupId>
 	<artifactId>tokenreplacer</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3</version>
 	<packaging>jar</packaging>
 	<name>tokenreplacer</name>
 	<description>Token Replacer is a simple and small Java Library that
