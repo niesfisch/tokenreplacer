@@ -45,7 +45,7 @@ toky.substitute(&quot;abc {0} {1} {2} def&quot;)); // will produce &quot;abc one
    
 ## Getting the Jar File
 
-either via Maven
+via Maven:
 
     <dependency>
         <groupId>de.marcelsauer</groupId>
@@ -53,7 +53,8 @@ either via Maven
         <version>1.3</version>
     </dependency>
 
-or just take the latest jar from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
+or just take the latest "tokenreplacer-x.y.jar" from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
+if you also need the sources and javadoc download the "tokenreplacer-x.y-sources.jar" / "tokenreplacer-x.y-javadoc.jar".
 
 ## Licence
 
