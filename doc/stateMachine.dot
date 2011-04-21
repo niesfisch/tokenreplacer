@@ -1,0 +1,9 @@
+digraph G {
+rankdir=LR;
+null [shape = plaintext label=""]
+null -> 1
+node [shape=ellipse];
+2 [shape=doublecircle];
+1 -> 1 [label = "a"];
+1 -> 2 [label = "b"];
+}

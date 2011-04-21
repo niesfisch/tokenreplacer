@@ -16,7 +16,6 @@
 
 package de.marcelsauer.tokenreplacer;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author msauer

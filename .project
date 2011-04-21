@@ -1,17 +1,18 @@
 <projectDescription>
-  <name>toky</name>
-  <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <name>tokenreplacer</name>
+  <comment>Token Replacer is a simple and small Java Library that
+		helps replacing tokens in strings.
+		You can replace the tokens with static values or create values
+		&quot;on-the-fly&quot; by calling a generator.
+		You can even pass arguments to the generator which makes it pretty
+		powerful. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>
     </buildCommand>
-    <buildCommand>
-      <name>org.maven.ide.eclipse.maven2Builder</name>
-    </buildCommand>
   </buildSpec>
   <natures>
-    <nature>org.maven.ide.eclipse.maven2Nature</nature>
     <nature>org.eclipse.jdt.core.javanature</nature>
   </natures>
 </projectDescription>

@@ -17,7 +17,7 @@
 package de.marcelsauer.tokenreplacer;
 
 /**
- * TODO java doc
+ * a typical token
  * 
  * @author msauer
  * @see Toky
@@ -66,7 +66,7 @@ public class Token {
 	 * @return the {@link #Token}
 	 */
 	public String getToken() {
-		return token;
+		return this.token;
 	}
 
 	/**
@@ -85,19 +85,19 @@ public class Token {
 	 * @return the {@link #Generator} associated with the {@link #Token}. can be null
 	 */
 	public Generator getGenerator() {
-		return generator;
+		return this.generator;
 	}
 
 	@Override
 	public String toString() {
-		return "Token [fullToken=" + fullToken + ", generator=" + generator + ", token=" + token + "]";
+		return "Token [fullToken=" + this.fullToken + ", generator=" + this.generator + ", token=" + this.token + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((token == null) ? 0 : token.hashCode());
+		result = prime * result + ((this.token == null) ? 0 : this.token.hashCode());
 		return result;
 	}
 
@@ -110,10 +110,10 @@ public class Token {
 		if (getClass() != obj.getClass())
 			return false;
 		Token other = (Token) obj;
-		if (token == null) {
+		if (this.token == null) {
 			if (other.token != null)
 				return false;
-		} else if (!token.equals(other.token))
+		} else if (!this.token.equals(other.token))
 			return false;
 		return true;
 	}

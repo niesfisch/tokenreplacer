@@ -16,7 +16,6 @@
 
 package de.marcelsauer.tokenreplacer;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * <p>
@@ -174,7 +173,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer register(String token, String value) {
-		return impl.register(token, value);
+		return this.impl.register(token, value);
 	}
 
 	/*
@@ -185,7 +184,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer register(Token token) {
-		return impl.register(token);
+		return this.impl.register(token);
 	}
 
 	/*
@@ -196,7 +195,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public String substitute(String toSubstitute) {
-		return impl.substitute(toSubstitute);
+		return this.impl.substitute(toSubstitute);
 	}
 
 	/*
@@ -208,7 +207,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer withArgumentDelimiter(String argsSep) {
-		return impl.withArgumentDelimiter(argsSep);
+		return this.impl.withArgumentDelimiter(argsSep);
 	}
 
 	/*
@@ -220,7 +219,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer withArgumentEnd(String argsEnd) {
-		return impl.withArgumentEnd(argsEnd);
+		return this.impl.withArgumentEnd(argsEnd);
 	}
 
 	/*
@@ -232,7 +231,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer withArgumentStart(String argsStart) {
-		return impl.withArgumentStart(argsStart);
+		return this.impl.withArgumentStart(argsStart);
 	}
 
 	/*
@@ -243,7 +242,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer withTokenEnd(String tokenEnd) {
-		return impl.withTokenEnd(tokenEnd);
+		return this.impl.withTokenEnd(tokenEnd);
 	}
 
 	/*
@@ -255,7 +254,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer withTokenStart(String tokenStart) {
-		return impl.withTokenStart(tokenStart);
+		return this.impl.withTokenStart(tokenStart);
 	}
 
 	/*
@@ -267,7 +266,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer register(String token, Generator Generator) {
-		return impl.register(token, Generator);
+		return this.impl.register(token, Generator);
 	}
 
 	/*
@@ -278,7 +277,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer doNotIgnoreMissingValues() {
-		return impl.doNotIgnoreMissingValues();
+		return this.impl.doNotIgnoreMissingValues();
 	}
 
 	/*
@@ -298,7 +297,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer enableGeneratorCaching() {
-		return impl.enableGeneratorCaching();
+		return this.impl.enableGeneratorCaching();
 	}
 
 	/*
@@ -308,7 +307,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer disableGeneratorCaching() {
-		return impl.disableGeneratorCaching();
+		return this.impl.disableGeneratorCaching();
 	}
 
 	/* (non-Javadoc)
@@ -316,7 +315,7 @@ public class Toky implements TokenReplacer {
 	 */
 	@Override
 	public TokenReplacer register(String[] replacements) {
-		return impl.register(replacements);
+		return this.impl.register(replacements);
 	}
 
 }

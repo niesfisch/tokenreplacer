@@ -28,177 +28,193 @@ import org.junit.Test;
 
 /**
  * @author msauer
- * 
  */
 public class TokyTest {
 
 	private TokenReplacer toky = new Toky();
 
-	public void setUp() {
+	public void setUp () {
 		this.toky = new Toky();
 	}
 
 	@Test
-	public void thatStaticValuesWork() {
-		toky.register("rand", "1234");
-		assertEquals("abc 1234 def", toky.substitute("abc {rand} def"));
-
-		toky.register(new Token("random").replacedBy("1234"));
-		assertEquals("abc 1234 def", toky.substitute("abc {random} def"));
+	public void thatNothingToReplaceWorks () {
+		String bounceItBack = "   abc   def   ";
+		assertEquals(bounceItBack, this.toky.substitute(bounceItBack));
 	}
 
 	@Test
-	public void thatGeneratedValuesWork() {
-		toky.register("random", new NumberGenerator());
-		toky.register(new Token("random").replacedBy(new NumberGenerator()));
-		toky.register(new Token("somechar").replacedBy(new SomeCharGenerator()));
+	public void thatStaticValuesWork () {
+		this.toky.register("rand", "1234");
+		assertEquals("abc 1234 def", this.toky.substitute("abc {rand} def"));
 
-		assertEquals("98765", toky.substitute("{random}"));
-		assertEquals("abc 98765", toky.substitute("{somechar} {random}"));
-		assertEquals("9876598765", toky.substitute("{random}{random}"));
-		assertEquals("... 98765 98765    ", toky.substitute("... {random} {random}    "));
+		this.toky.register(new Token("random").replacedBy("1234"));
+		assertEquals("abc 1234 def", this.toky.substitute("abc {random} def"));
 	}
 
 	@Test
-	public void thatReplacementArraysWork() {
-		toky.register(new String[] { "one" }).ignoreMissingValues();
-		assertEquals("abc one {1} {2} def", toky.substitute("abc {0} {1} {2} def"));
+	public void thatGeneratedValuesWork () {
+		this.toky.register("random", new NumberGenerator());
+		this.toky.register(new Token("random").replacedBy(new NumberGenerator()));
+		this.toky.register(new Token("somechar").replacedBy(new SomeCharGenerator()));
 
-		toky.register(new String[] { "", " " });
-		assertEquals("abc    {2} def", toky.substitute("abc {0} {1} {2} def"));
+		assertEquals("98765", this.toky.substitute("{random}"));
+		assertEquals("abc 98765", this.toky.substitute("{somechar} {random}"));
+		assertEquals("9876598765", this.toky.substitute("{random}{random}"));
+		assertEquals("... 98765 98765    ", this.toky.substitute("... {random} {random}    "));
+	}
 
-		toky.register(new String[] {});
-		assertEquals("xxx", toky.substitute("xxx"));
+	@Test
+	public void thatReplacementArraysWork () {
+		this.toky.register(new String[] {"one"}).ignoreMissingValues();
+		assertEquals("abc one {1} {2} def", this.toky.substitute("abc {0} {1} {2} def"));
 
-		toky.register(new String[] { "one" });
-		assertEquals("oneoneone", toky.substitute("{0}{0}{0}"));
+		this.toky.register(new String[] {"", " "});
+		assertEquals("abc    {2} def", this.toky.substitute("abc {0} {1} {2} def"));
+
+		this.toky.register(new String[] {});
+		assertEquals("xxx", this.toky.substitute("xxx"));
+
+		this.toky.register(new String[] {"one"});
+		assertEquals("oneoneone", this.toky.substitute("{0}{0}{0}"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void thatNullReplacementArraysThrowException() {
-		toky.register((String[]) null);
+	public void thatNullReplacementArraysThrowException () {
+		this.toky.register((String[])null);
 	}
 
 	@Test
-	public void thatOverwrittenTokenDelimitersWork() {
-		toky.register(new Token("random").replacedBy(new NumberGenerator())).withTokenStart("[").withTokenEnd("]");
-		toky.register(new Token("somechar").replacedBy(new SomeCharGenerator()));
+	public void thatOverwrittenTokenDelimitersWork () {
+		this.toky.register(new Token("random").replacedBy(new NumberGenerator())).withTokenStart("[").withTokenEnd("]");
+		this.toky.register(new Token("somechar").replacedBy(new SomeCharGenerator()));
 
-		assertEquals("98765 abc", toky.substitute("[random] [somechar]"));
+		assertEquals("98765 abc", this.toky.substitute("[random] [somechar]"));
 
-		toky.register(new Token("random").replacedBy(new NumberGenerator())).withTokenStart("[").withTokenEnd("]");
+		this.toky.register(new Token("random").replacedBy(new NumberGenerator())).withTokenStart("[").withTokenEnd("]");
 
-		assertEquals("98765", toky.substitute("[random]"));
-		assertEquals("9876598765", toky.substitute("[random][random]"));
-		assertEquals("... 98765 98765    ", toky.substitute("... [random] [random]    "));
+		assertEquals("98765", this.toky.substitute("[random]"));
+		assertEquals("9876598765", this.toky.substitute("[random][random]"));
+		assertEquals("... 98765 98765    ", this.toky.substitute("... [random] [random]    "));
 	}
 
 	@Test
-	public void thatGeneratorWithArgumentsWork() {
-		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
-		toky.register("static", "static value");
-		assertEquals("123", toky.substitute("{dynamicValue(1,2,3)}"));
+	public void thatGeneratorWithArgumentsWork () {
+		this.toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
+		this.toky.register("static", "static value");
+		assertEquals("123", this.toky.substitute("{dynamicValue(1,2,3)}"));
 
-		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
-		assertEquals("1 2 3", toky.substitute("{dynamicValue(1)} {dynamicValue(2)} {dynamicValue(3)}"));
+		this.toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
+		assertEquals("1 2 3", this.toky.substitute("{dynamicValue(1)} {dynamicValue(2)} {dynamicValue(3)}"));
 	}
 
 	@Test
-	public void thatEmptyArgumentsWork() {
-		toky.register(new Token("value").replacedBy(new DynamicGenerator()));
-		assertEquals("abc", toky.substitute("{value()}"));
+	public void thatEmptyArgumentsWork () {
+		this.toky.register(new Token("value").replacedBy(new DynamicGenerator()));
+		assertEquals("abc", this.toky.substitute("{value()}"));
 	}
 
 	@Test
-	public void thatGeneratorCachingWorks() {
-		toky.register("nonCachingDefault", new Generator() {
+	public void thatGeneratorCachingWorks () {
+		this.toky.register("nonCachingDefault", new Generator() {
+
 			Random rand = new Random();
 
 			@Override
-			public void inject(String[] args) {
+			public void inject (String[] args) {
 			}
 
 			@Override
-			public String generate() {
-				return String.valueOf(rand.nextInt());
+			public String generate () {
+				return String.valueOf(this.rand.nextInt());
 			}
 		});
 		// caching is disabled by default
-		String replacedFirst = toky.substitute("{nonCachingDefault}");
-		String replacedSecond = toky.substitute("{nonCachingDefault}");
+		String replacedFirst = this.toky.substitute("{nonCachingDefault}");
+		String replacedSecond = this.toky.substitute("{nonCachingDefault}");
 		assertTrue(replacedFirst != null && !"".equals(replacedFirst));
 		assertFalse(replacedFirst.equals(replacedSecond));
 
 		// enable
-		toky.enableGeneratorCaching();
-		replacedFirst = toky.substitute("{nonCachingDefault}");
-		replacedSecond = toky.substitute("{nonCachingDefault}");
+		this.toky.enableGeneratorCaching();
+		replacedFirst = this.toky.substitute("{nonCachingDefault}");
+		replacedSecond = this.toky.substitute("{nonCachingDefault}");
 		assertTrue(replacedFirst.equals(replacedSecond));
 
 		// disable
-		toky.disableGeneratorCaching();
-		replacedFirst = toky.substitute("{nonCachingDefault}");
-		replacedSecond = toky.substitute("{nonCachingDefault}");
+		this.toky.disableGeneratorCaching();
+		replacedFirst = this.toky.substitute("{nonCachingDefault}");
+		replacedSecond = this.toky.substitute("{nonCachingDefault}");
 		assertTrue(replacedFirst != null && !"".equals(replacedFirst));
 		assertFalse(replacedFirst.equals(replacedSecond));
 
 	}
 
 	@Test
-	public void thatMoreThanOneCharArgumentsWork() {
-		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
-		assertEquals("110", toky.substitute("{dynamicValue(1,10)}"));
-		assertEquals("101", toky.substitute("{dynamicValue(10,1)}"));
-		assertEquals("aaabbbccc", toky.substitute("{dynamicValue(aaa,bbb,ccc)}"));
+	public void thatMoreThanOneCharArgumentsWork () {
+		this.toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
+		assertEquals("110", this.toky.substitute("{dynamicValue(1,10)}"));
+		assertEquals("101", this.toky.substitute("{dynamicValue(10,1)}"));
+		assertEquals("aaabbbccc", this.toky.substitute("{dynamicValue(aaa,bbb,ccc)}"));
 	}
 
 	@Test
-	public void thatAllFeaturesInOneWork() {
-		toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
-		toky.register("static", "static value");
-		toky.withTokenStart("*");
-		toky.withTokenEnd("#");
-		toky.withArgumentDelimiter(";");
-		toky.withArgumentStart("[");
-		toky.withArgumentEnd("]");
+	public void thatAllFeaturesInOneWork () {
+		this.toky.register(new Token("dynamicValue").replacedBy(new DynamicGenerator()));
+		this.toky.register("static", "static value");
+		this.toky.withTokenStart("*");
+		this.toky.withTokenEnd("#");
+		this.toky.withArgumentDelimiter(";");
+		this.toky.withArgumentStart("[");
+		this.toky.withArgumentEnd("]");
 
-		toky.register("theToken", "abc");
-		assertEquals("a b c 1x2y3z static value +++", toky.substitute("a b c *dynamicValue[1x;2y;3z]# *static# +++"));
+		this.toky.register("theToken", "abc");
+		assertEquals("a b c 1x2y3z static value +++", this.toky.substitute("a b c *dynamicValue[1x;2y;3z]# *static# +++"));
 	}
 
 	@Test
-	public void thatInvalidEnclosingCharsResultInException() {
-		toky.doNotIgnoreMissingValues();
+	public void thatInvalidEnclosingCharsResultInException () {
+		this.toky.doNotIgnoreMissingValues();
 		assertExceptedException("value}");
 		assertExceptedException("{value");
 		assertExceptedException("{value{");
 		assertExceptedException("}value}");
 		assertExceptedException("}value{");
+		assertExceptedException("value()");
+		assertExceptedException("value(.....)");
+		assertExceptedException("value)(");
+		assertExceptedException("(");
+		assertExceptedException(")");
+		assertExceptedException("((");
+		assertExceptedException("))");
+		assertExceptedException("{}");
+		assertExceptedException("}{");
+		assertExceptedException("}(){");
+		assertExceptedException("abc {rand} def"); //---> warum?
 	}
 
 	@Test
-	public void thatNoGeneratorOrValueResultsInException() {
-		toky.doNotIgnoreMissingValues();
+	public void thatNoGeneratorOrValueResultsInException () {
+		this.toky.doNotIgnoreMissingValues();
 		assertExceptedException("{value}");
 	}
 
 	@Test
-	public void thatEmptyStringsToSubstituteWork() {
-		assertNull(toky.substitute(null));
-		assertEquals("", toky.substitute(""));
+	public void thatEmptyStringsToSubstituteWork () {
+		assertNull(this.toky.substitute(null));
+		assertEquals("", this.toky.substitute(""));
 	}
 
 	@Test
-	public void thatIgnoresMissingValuesWorksEvenIfValuesAreMissing() {
-		toky.ignoreMissingValues();
-		assertEquals("{willNotBeReplacedBecauseNotDefined}", toky.substitute("{willNotBeReplacedBecauseNotDefined}"));
-		assertEquals("{willNotBeReplacedBecauseNotDefined(1,2)}", toky
-				.substitute("{willNotBeReplacedBecauseNotDefined(1,2)}"));
+	public void thatIgnoresMissingValuesWorksEvenIfValuesAreMissing () {
+		this.toky.ignoreMissingValues();
+		assertEquals("{willNotBeReplacedBecauseNotDefined}", this.toky.substitute("{willNotBeReplacedBecauseNotDefined}"));
+		assertEquals("{willNotBeReplacedBecauseNotDefined(1,2)}", this.toky.substitute("{willNotBeReplacedBecauseNotDefined(1,2)}"));
 	}
 
 	@Test
-	public void thatInvalidArgumentsResultsInException() {
-		toky.register(new Token("value").replacedBy(new DynamicGenerator()));
+	public void thatInvalidArgumentsResultsInException () {
+		this.toky.register(new Token("value").replacedBy(new DynamicGenerator()));
 		assertExceptedException("{value)}");
 		assertExceptedException("{value(}");
 		assertExceptedException("{value(1,)}");
@@ -207,55 +223,58 @@ public class TokyTest {
 		assertExceptedException("{value(,,)}");
 	}
 
-	private void assertExceptedException(String toSubstitute) {
+	private void assertExceptedException (String toSubstitute) {
 		try {
-			toky.substitute(toSubstitute);
+			this.toky.substitute(toSubstitute);
 			fail(String.format("expected IllegalStateException to be thrown for token '%s'", toSubstitute));
 		} catch (IllegalStateException expected) {
-			// System.out.println("expected exception is: " + expected);
+			// expected
 		}
 	}
 
 	private class DynamicGenerator implements Generator {
+
 		private String[] args;
 
 		@Override
-		public String generate() {
-			if (args.length == 0) {
+		public String generate () {
+			if (this.args.length == 0) {
 				return "abc";
 			}
 			String result = "";
-			for (String arg : args) {
+			for (String arg : this.args) {
 				result += arg;
 			}
 			return result;
 		}
 
 		@Override
-		public void inject(String[] args) {
+		public void inject (String[] args) {
 			this.args = args;
 		}
 	}
 
 	private class NumberGenerator implements Generator {
+
 		@Override
-		public String generate() {
+		public String generate () {
 			return "98765";
 		}
 
 		@Override
-		public void inject(String[] args) {
+		public void inject (String[] args) {
 		}
 	}
 
 	private class SomeCharGenerator implements Generator {
+
 		@Override
-		public String generate() {
+		public String generate () {
 			return "abc";
 		}
 
 		@Override
-		public void inject(String[] args) {
+		public void inject (String[] args) {
 		}
 	}
 }

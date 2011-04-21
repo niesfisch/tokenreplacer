@@ -41,7 +41,7 @@ public class PerformanceEval {
 
         for (String test : toSubstitute) { 
             long start = System.currentTimeMillis(); 
-            for (int i = 0; i <= 1000000; i++) { 
+            for (int i = 0; i <= 999999; i++) { 
                 toky.substitute(test); 
             } 
             long end = System.currentTimeMillis(); 
