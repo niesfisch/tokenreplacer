@@ -1,9 +1,18 @@
 digraph G {
-rankdir=LR;
+#rankdir=LR;
 null [shape = plaintext label=""]
 null -> 1
 node [shape=ellipse];
-2 [shape=doublecircle];
-1 -> 1 [label = "a"];
-1 -> 2 [label = "b"];
+1 [shape=doublecircle];
+1 -> 1 [label = "!Identifier\n+out_buffer", color="red"];
+1 -> 2 [label = "token started\n'{'"];
+2 -> 3 [label = "!Identifier\n+token_buffer"];
+3 -> 3 [label = "!Identifier\n+token_buffer"];
+3 -> 1 [label = "token end '}'\nresolveToken()\nresolveArgs()\n+out_buffer", color="red"];
+3 -> 4 [label = "args started\n'('"];
+4 -> 5 [label = "!Identifier\n+args_buffer"];
+4 -> 6 [label = "args end\n')'"];
+5 -> 5 [label = "!Identifier\n+args_buffer"];
+5 -> 6 [label = "args end\n')'"];
+6 -> 1 [label = "token end\n'}'\nresolveToken()\nresolveArgs()\n+out_buffer", color="red"];
 }

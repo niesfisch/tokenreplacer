@@ -161,7 +161,7 @@ public class Toky implements TokenReplacer {
 	 * constructs a new {@link TokenReplacer}.
 	 */
 	public Toky() {
-		this.impl = new CharSequenceTokenReplacer();
+		this.impl = new FiniteStateMachineTokenReplacer();
 	}
 
 	/*
