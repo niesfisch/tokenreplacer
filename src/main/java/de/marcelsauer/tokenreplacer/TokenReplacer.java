@@ -36,9 +36,12 @@ public interface TokenReplacer {
 	 *            the string that contains the tokens, will be returned as-is in
 	 *            case of null or empty string
 	 * @return the result after replacing all tokens with the proper values
-	 * @throws IllegalStateException
+	 * @throws ParseException
 	 *             when the internal state is incorrect and error reporting was
 	 *             turned on via {@link #doNotIgnoreMissingValues()}
+	 * @throws NoValueOrGeneratorFoundException
+	 *             when no explicit value or {@link Generator} was found for the token and
+	 *             we don't ignore errors via {@link #doNotIgnoreMissingValues()}
 	 */
 	String substitute(final String toSubstitute);
 

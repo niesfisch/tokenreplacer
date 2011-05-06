@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * parser implementation based on {@link CharacterIterator} and
- * {@link StringCharacterIterator} NOT PART OF THE PUBLIC API! STILL HERE AND
+ * parser implementation based on {@link CharacterIterator} and {@link StringCharacterIterator} NOT PART OF THE PUBLIC API! STILL HERE AND
  * PUBLIC IN CASE YOU NEED TO 'EMERGENCY' SUBCLASS.
  * 
  * @author msauer
@@ -68,7 +67,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 	protected final Map<String, Token> tokens = new HashMap<String, Token>();
 
 	@Override
-	public String substitute(String toSubstitute) {
+	public String substitute (String toSubstitute) {
 
 		if (toSubstitute == null) {
 			return null;
@@ -82,77 +81,83 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 		for (int i = 0; i < toSubstitute.length(); ++i) {
 			char c = toSubstitute.charAt(i);
 			switch (state) {
-			case 1: // BEGIN, END
-				if (isStdInput(c)) {
-					state = 1;
-					this.result.append(c);
-				} else if (isEndOfString(c)) {
-					state = 1;
-				} else if (isTokenStart(c)) {
-					state = 2;
-					this.token = new StringBuilder();
-				} else {
-					this.result.append(c); // ?? correct?
-					// state = -1;
-				}
-				break;
-			case 2: // TOKEN_STARTED
-				if (isStdInput(c)) {
-					state = 3;
-					this.token.append(c);
-				} else {
-					state = -1;
-				}
-				break;
-			case 3: // READING_TOKEN
-				if (isStdInput(c)) {
-					state = 3;
-					this.token.append(c);
-				} else if (isArgStart(c)) {
-					state = 4;
-					this.args = new StringBuilder();
-				} else if (isTokenEnd(c)) {
-					state = 1;
-					this.result.append(evalToken());
-				} else {
-					state = -1;
-				}
-				break;
-			case 4: // TOKEN_ARGS_STARTED
-				if (isArgEnd(c)) {
-					state = 6;
-				} else if (isStdInput(c)) {
-					state = 5;
-					this.args.append(c);
-				} else {
-					state = -1;
-				}
-				break;
-			case 5: // READING_TOKEN_ARGS
-				if (isArgEnd(c)) {
-					state = 6;
-				} else if (isStdInput(c)) {
-					state = 5;
-					this.args.append(c);
-				} else {
-					state = -1;
-				}
-				break;
-			case 6: // ARGS_END
-				if (isArgEnd(c)) {
-					state = 6;
-				} else if (isTokenEnd(c)) {
-					state = 1;
-					this.result.append(evalToken());
-				} else {
-					state = -1;
-				}
-				break;
+				case 1: // BEGIN, END
+					if (isStdInput(c)) {
+						state = 1;
+						this.result.append(c);
+					} else if (isEndOfString(c)) {
+						state = 1;
+					} else if (isTokenStart(c)) {
+						state = 2;
+						this.token = new StringBuilder();
+					} else if (isTokenEnd(c)) {
+						state = -1;
+					} else if (isArgStart(c)) {
+						state = -1;
+					} else if (isArgEnd(c)) {
+						state = -1;
+					} else {
+						this.result.append(c); // ?? correct?
+						// state = -1;
+					}
+					break;
+				case 2: // TOKEN_STARTED
+					if (isStdInput(c)) {
+						state = 3;
+						this.token.append(c);
+					} else {
+						state = -1;
+					}
+					break;
+				case 3: // READING_TOKEN
+					if (isStdInput(c)) {
+						state = 3;
+						this.token.append(c);
+					} else if (isArgStart(c)) {
+						state = 4;
+						this.args = new StringBuilder();
+					} else if (isTokenEnd(c)) {
+						state = 1;
+						this.result.append(evalToken());
+					} else {
+						state = -1;
+					}
+					break;
+				case 4: // TOKEN_ARGS_STARTED
+					if (isArgEnd(c)) {
+						state = 6;
+					} else if (isStdInput(c)) {
+						state = 5;
+						this.args.append(c);
+					} else {
+						state = -1;
+					}
+					break;
+				case 5: // READING_TOKEN_ARGS
+					if (isArgEnd(c)) {
+						state = 6;
+					} else if (isStdInput(c)) {
+						state = 5;
+						this.args.append(c);
+					} else {
+						state = -1;
+					}
+					break;
+				case 6: // ARGS_END
+					if (isArgEnd(c)) {
+						state = 6;
+					} else if (isTokenEnd(c)) {
+						state = 1;
+						this.result.append(evalToken());
+					} else {
+						state = -1;
+					}
+					break;
 
-			case -1:
-				error();
-			default:
-				error();
+				case -1:
+					error();
+				default:
+					error();
 			}
 		}
 
@@ -163,57 +168,56 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 		return this.result.toString();
 	}
 
-	private void error() {
-		throw new IllegalStateException(
-				"Invalid input. The given String could not be parsed. Please check if all tokens, brackets etc. are correct.");
+	private void error () {
+		throw new ParseException("Invalid input. The given String could not be parsed. Please check if all tokens, brackets etc. are correct.");
 	}
 
-	private boolean isFinalStateReached(int state) {
+	private boolean isFinalStateReached (int state) {
 		return state == 1;
 	}
 
-	private boolean isEndOfString(char c) {
+	private boolean isEndOfString (char c) {
 		return c == END_OF_STRING;
 	}
 
-	private boolean isArgStart(char c) {
+	private boolean isArgStart (char c) {
 		return this.argsStart == c;
 	}
 
-	private boolean isArgEnd(char c) {
+	private boolean isArgEnd (char c) {
 		return this.argsEnd == c;
 	}
 
-	private boolean isTokenEnd(char c) {
+	private boolean isTokenEnd (char c) {
 		return this.tokenEnd == c;
 	}
 
-	private boolean isTokenStart(char c) {
+	private boolean isTokenStart (char c) {
 		return this.tokenStart == c;
 	}
 
-	private boolean isStdInput(char c) {
+	private boolean isStdInput (char c) {
 		boolean isIdentifier = isTokenStart(c) || isTokenEnd(c) || isArgStart(c) || isArgEnd(c) || isEndOfString(c);
 		return (!isIdentifier);
 	}
 
-	protected boolean isStartOfToken(final char character) {
+	protected boolean isStartOfToken (final char character) {
 		return this.tokenStart == character;
 	}
 
-	protected boolean isStartOfArguments(final char character) {
+	protected boolean isStartOfArguments (final char character) {
 		return this.argsStart == character;
 	}
 
-	protected boolean isEndOfArguments(final char character) {
+	protected boolean isEndOfArguments (final char character) {
 		return this.argsEnd == character;
 	}
 
-	protected boolean isEndOfToken(final char character) {
+	protected boolean isEndOfToken (final char character) {
 		return this.tokenEnd == character;
 	}
 
-	protected String[] extractArgs(final String tokenName) {
+	protected String[] extractArgs (final String tokenName) {
 		if (this.args.length() == 0) {
 			return new String[] {};
 		}
@@ -223,17 +227,16 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 	}
 
 	/**
-	 * stuff like {dynamic(1,)} or {dynamic(1,2,)} seems to be invalid TODO do
-	 * proper parsing instead of regex
+	 * stuff like {dynamic(1,)} or {dynamic(1,2,)} seems to be invalid TODO do proper parsing instead of regex
 	 */
-	protected void checkArgumentsAreValid(final String tokenName) {
+	protected void checkArgumentsAreValid (final String tokenName) {
 		if (this.args.length() > 0 && (this.args.toString().matches("^,.*") || this.args.toString().matches(".*,$"))) {
-			throw new IllegalStateException(String.format(
-					"the given arguments '%s' for token '%s' seem to be incorrect!", this.args.toString(), tokenName));
+			throw new ParseException(String.format("the given arguments '%s' for token '%s' seem to be incorrect!", this.args.toString(),
+					tokenName));
 		}
 	}
 
-	protected void reset(final boolean resetResult) {
+	protected void reset (final boolean resetResult) {
 		this.token = new StringBuilder();
 		this.args = new StringBuilder();
 		if (resetResult) {
@@ -241,20 +244,20 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 		}
 	}
 
-	protected String evalToken() {
+	protected String evalToken () {
 		final String tokenName = this.token.toString();
 		final String[] args = extractArgs(tokenName);
 		if (!this.tokens.containsKey(tokenName)) {
 			if (this.ignoreMissingValues) {
 				return tokenWithPossibleArguments();
 			} else {
-				throw new IllegalStateException(String.format("no value or generator for token '%s' found!", tokenName));
+				throw new NoValueOrGeneratorFoundException(String.format("no value or generator for token '%s' found!", tokenName));
 			}
 		}
 		return getGeneratorValue(tokenName, args);
 	}
 
-	private String getGeneratorValue(final String tokenName, final String[] args) {
+	private String getGeneratorValue (final String tokenName, final String[] args) {
 		String value = null;
 		if (this.generatorCachingEnabled && this.generatorCache.containsKey(tokenName)) {
 			return this.generatorCache.get(tokenName);
@@ -268,7 +271,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 		return value;
 	}
 
-	private String tokenWithPossibleArguments() {
+	private String tokenWithPossibleArguments () {
 		if (this.args.length() > 0) {
 			return this.tokenStart + this.token.toString() + this.argsStart + this.args + this.argsEnd + this.tokenEnd;
 		} else {
@@ -278,13 +281,10 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String,
-	 * java.lang.String)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public TokenReplacer register(final String token, final String value) {
+	public TokenReplacer register (final String token, final String value) {
 		Validate.notEmpty(token);
 		Validate.notNull(value);
 		this.register(new Token(token).replacedBy(value));
@@ -293,12 +293,10 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @seede.marcelsauer.tokenreplacer.TokenReplacer#register(de.marcelsauer.
-	 * tokenreplacer.Token)
+	 * @seede.marcelsauer.tokenreplacer.TokenReplacer#register(de.marcelsauer. tokenreplacer.Token)
 	 */
 	@Override
-	public TokenReplacer register(final Token token) {
+	public TokenReplacer register (final Token token) {
 		Validate.notNull(token);
 		Validate.notNull(token.getGenerator(), "please specifiy a value or a generator for the token!");
 		this.tokens.put(token.getToken(), token);
@@ -307,13 +305,10 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String,
-	 * de.marcelsauer.tokenreplacer.Generator)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String, de.marcelsauer.tokenreplacer.Generator)
 	 */
 	@Override
-	public TokenReplacer register(String token, Generator generator) {
+	public TokenReplacer register (String token, Generator generator) {
 		Validate.notEmpty(token);
 		Validate.notNull(generator);
 		return this.register(new Token(token).replacedBy(generator));
@@ -321,13 +316,10 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#withTokenStart(java.lang.String
-	 * )
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#withTokenStart(java.lang.String )
 	 */
 	@Override
-	public TokenReplacer withTokenStart(String tokenStart) {
+	public TokenReplacer withTokenStart (String tokenStart) {
 		ensureOneChar(tokenStart);
 		this.tokenStart = tokenStart.charAt(0);
 		return this;
@@ -335,33 +327,27 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#withTokenEnd(java.lang.String)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#withTokenEnd(java.lang.String)
 	 */
 	@Override
-	public TokenReplacer withTokenEnd(String tokenEnd) {
+	public TokenReplacer withTokenEnd (String tokenEnd) {
 		ensureOneChar(tokenEnd);
 		this.tokenEnd = tokenEnd.charAt(0);
 		return this;
 	}
 
-	protected void ensureOneChar(String character) {
+	protected void ensureOneChar (String character) {
 		if (character.length() != 1) {
-			throw new IllegalArgumentException(String.format("the given string '%s' must be exactly of size 1",
-					character));
+			throw new IllegalArgumentException(String.format("the given string '%s' must be exactly of size 1", character));
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentDelimiter(java
-	 * .lang.String)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentDelimiter(java .lang.String)
 	 */
 	@Override
-	public TokenReplacer withArgumentDelimiter(String argsSep) {
+	public TokenReplacer withArgumentDelimiter (String argsSep) {
 		ensureOneChar(argsSep);
 		this.argsSep = argsSep.charAt(0);
 		return this;
@@ -369,13 +355,10 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentStart(java.lang
-	 * .String)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentStart(java.lang .String)
 	 */
 	@Override
-	public TokenReplacer withArgumentStart(String argsStart) {
+	public TokenReplacer withArgumentStart (String argsStart) {
 		ensureOneChar(argsStart);
 		this.argsStart = argsStart.charAt(0);
 		return this;
@@ -383,13 +366,10 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentEnd(java.lang.
-	 * String)
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentEnd(java.lang. String)
 	 */
 	@Override
-	public TokenReplacer withArgumentEnd(String argsEnd) {
+	public TokenReplacer withArgumentEnd (String argsEnd) {
 		ensureOneChar(argsEnd);
 		this.argsEnd = argsEnd.charAt(0);
 		return this;
@@ -397,57 +377,50 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#doNotIgnoreMissingValues()
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#doNotIgnoreMissingValues()
 	 */
 	@Override
-	public TokenReplacer doNotIgnoreMissingValues() {
+	public TokenReplacer doNotIgnoreMissingValues () {
 		this.ignoreMissingValues = false;
 		return this;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#ignoreMissingValues()
 	 */
 	@Override
-	public TokenReplacer ignoreMissingValues() {
+	public TokenReplacer ignoreMissingValues () {
 		this.ignoreMissingValues = true;
 		return this;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#enableGeneratorCaching()
 	 */
 	@Override
-	public TokenReplacer enableGeneratorCaching() {
+	public TokenReplacer enableGeneratorCaching () {
 		this.generatorCachingEnabled = true;
 		return this;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#disableGeneratorCaching()
 	 */
 	@Override
-	public TokenReplacer disableGeneratorCaching() {
+	public TokenReplacer disableGeneratorCaching () {
 		this.generatorCachingEnabled = false;
 		return this;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String[])
+	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String[])
 	 */
 	@Override
-	public TokenReplacer register(String[] replacements) {
+	public TokenReplacer register (String[] replacements) {
 		Validate.notNull(replacements);
 		int i = 0;
 		for (String replacement : replacements) {

@@ -9,6 +9,9 @@ New Features
 + implemented FR-1 http://github.com/niesfisch/tokenreplacer/issues#issue/2
 ++ new method TokenReplacer register(String[] replacements);
 
++ ParseException instead of IllegalStateException
++ NoValueOrGeneratorFoundException instead of IllegalStateException
+	 
 
 *** Release 1.2 (2010-09-29)
 
