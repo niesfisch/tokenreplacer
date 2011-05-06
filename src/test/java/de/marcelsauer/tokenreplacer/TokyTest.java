@@ -17,14 +17,14 @@
 package de.marcelsauer.tokenreplacer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.util.Random;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author msauer
@@ -118,38 +118,28 @@ public class TokyTest {
 
 	@Test
 	public void thatGeneratorCachingWorks () {
-		this.toky.register("nonCachingDefault", new Generator() {
-
-			Random rand = new Random();
-
-			@Override
-			public void inject (String[] args) {
-			}
-
-			@Override
-			public String generate () {
-				return String.valueOf(this.rand.nextInt());
-			}
-		});
+		
+		Generator generator = Mockito.mock(Generator.class);
+		this.toky.register("random", generator);
+		
 		// caching is disabled by default
-		String replacedFirst = this.toky.substitute("{nonCachingDefault}");
-		String replacedSecond = this.toky.substitute("{nonCachingDefault}");
-		assertTrue(replacedFirst != null && !"".equals(replacedFirst));
-		assertFalse(replacedFirst.equals(replacedSecond));
+		this.toky.disableGeneratorCaching();
+		String replacedFirst = this.toky.substitute("{random}");
+		String replacedSecond = this.toky.substitute("{random}");
+		assertEquals(replacedFirst, replacedSecond);
+		verify(generator, times(2)).generate();
 
 		// enable
 		this.toky.enableGeneratorCaching();
-		replacedFirst = this.toky.substitute("{nonCachingDefault}");
-		replacedSecond = this.toky.substitute("{nonCachingDefault}");
-		assertTrue(replacedFirst.equals(replacedSecond));
+		reset(generator);
+		replacedFirst = this.toky.substitute("{random} {random}");
+		verify(generator, times(1)).generate();
 
 		// disable
 		this.toky.disableGeneratorCaching();
-		replacedFirst = this.toky.substitute("{nonCachingDefault}");
-		replacedSecond = this.toky.substitute("{nonCachingDefault}");
-		assertTrue(replacedFirst != null && !"".equals(replacedFirst));
-		assertFalse(replacedFirst.equals(replacedSecond));
-
+		reset(generator);
+		replacedFirst = this.toky.substitute("{random} {random}");
+		verify(generator, times(2)).generate();
 	}
 
 	@Test
