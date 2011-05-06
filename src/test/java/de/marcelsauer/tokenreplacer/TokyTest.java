@@ -178,28 +178,30 @@ public class TokyTest {
 	public void thatInvalidEnclosingCharsResultInException () {
 		this.toky.doNotIgnoreMissingValues();
 		this.toky.register("token", new NumberGenerator());
-		assertParseException("abc {token(1,2)}} end");
-
-		assertParseException("value}");
 		assertParseException("{value");
 		assertParseException("{value{");
-		assertParseException("}value}");
 		assertParseException("}value{");
-		assertParseException("value()");
-		assertParseException("value(.....)");
-		assertParseException("value)(");
-		assertParseException("(");
-		assertParseException(")");
-		assertParseException("((");
-		assertParseException("))");
 		assertParseException("{}");
-		assertParseException("}{");
-		assertParseException("}(){");
 		assertParseException("abc {} def");
 		assertParseException("abc {()} def");
 		assertParseException("abc {{token}} end");
 		assertParseException("abc {token(1,2} end");
+		assertParseException("}{");
+		assertParseException("}(){");
+	}
 
+	@Test
+	public void thatResultIsAppendEvenIfTokenNotStarted () {
+		this.toky.doNotIgnoreMissingValues();
+		assertSame("value}");
+		assertSame("value()");
+		assertSame("}value}");
+		assertSame("value(.....)");
+		assertSame("value)(");
+		assertSame("(");
+		assertSame(")");
+		assertSame("((");
+		assertSame("))");
 	}
 
 	@Test(expected = NoValueOrGeneratorFoundException.class)
@@ -230,6 +232,10 @@ public class TokyTest {
 		assertParseException("{value(1,2,)}");
 		assertParseException("{value(,)}");
 		assertParseException("{value(,,)}");
+	}
+
+	private void assertSame (String inAndOut) {
+		assertEquals(inAndOut, this.toky.substitute(inAndOut));
 	}
 
 	private void assertParseException (String toSubstitute) {

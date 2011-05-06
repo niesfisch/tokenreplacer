@@ -90,12 +90,6 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 					} else if (isTokenStart(c)) {
 						state = 2;
 						this.token = new StringBuilder();
-					} else if (isTokenEnd(c)) {
-						state = -1;
-					} else if (isArgStart(c)) {
-						state = -1;
-					} else if (isArgEnd(c)) {
-						state = -1;
 					} else {
 						this.result.append(c); // ?? correct?
 						// state = -1;
