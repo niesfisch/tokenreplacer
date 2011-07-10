@@ -50,7 +50,7 @@ via Maven:
     <dependency>
         <groupId>de.marcelsauer</groupId>
         <artifactId>tokenreplacer</artifactId>
-        <version>1.3</version>
+        <version>1.3.1</version>
     </dependency>
 
 or just take the latest "tokenreplacer-x.y.jar" from the [downloads](http://github.com/niesfisch/tokenreplacer/downloads) section and put it in your classpath.
