@@ -1,6 +1,7 @@
-*** Release 1.xx (2011-xx-xx)
+*** Release 1.3.1 (2011-07-10)
 + changed parsing mechanism to use finite state machine design
 + enhanced test coverage
+- renamed CharSequenceTokenReplacer to FiniteStateMachineTokenReplacer (not part of the public API)
 
 *** Release 1.3 (2010-10-09)
 
