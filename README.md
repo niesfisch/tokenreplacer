@@ -6,10 +6,11 @@ You can replace tokens with <b>simple static strings</b>:
 	
 	String toReplace = "i can count to {number}";
     String result = new Toky().register("number", "123").substitute(toReplace);
+    System.out.println(result); // i can count to 123
 
 or strings generated <b>"on-the-fly"</b>: 
 	
-	String toReplace = ""i can count to {number}";
+	String toReplace = "i can count to {number}";
     String result = new Toky().register(new Token("number").replacedBy(new Generator() {
     
         @Override
@@ -22,6 +23,7 @@ or strings generated <b>"on-the-fly"</b>:
             return "123"; // some very sophisticated stuff happens here :), we just return 123 to keep it simple^
         }
      })).substitute(toReplace);
+     System.out.println(result); // i can count to 123
 
 You can even <b>pass arguments</b> to the generator which makes it pretty powerful:
 	
@@ -38,6 +40,7 @@ You can even <b>pass arguments</b> to the generator which makes it pretty powerf
             return args[0] + args[1] + args[2]; // some very sophisticated stuff happens here :)
         }
      })).substitute(toReplace);
+     System.out.println(result); // i can count to 123
 
 If you prefer to use <b>index based tokens</b>, you can also use this:
  
