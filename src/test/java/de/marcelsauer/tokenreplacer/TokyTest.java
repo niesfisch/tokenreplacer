@@ -117,11 +117,20 @@ public class TokyTest {
 	}
 
 	@Test
+	public void thatHashInStringsWork () {
+		String toReplaceWithHashes = "######{value}######";
+		String expected = "######123######";
+
+		this.toky.register(new Token("value").replacedBy("123"));
+		assertEquals(expected, this.toky.substitute(toReplaceWithHashes));
+	}
+
+	@Test
 	public void thatGeneratorCachingWorks () {
-		
+
 		Generator generator = Mockito.mock(Generator.class);
 		this.toky.register("random", generator);
-		
+
 		// caching is disabled by default
 		this.toky.disableGeneratorCaching();
 		String replacedFirst = this.toky.substitute("{random}");

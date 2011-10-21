@@ -32,7 +32,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 	/**
 	 * TODO handle end of string properly
 	 */
-	private static final char END_OF_STRING = '#';
+	private static final char END_OF_STRING = '\0';
 
 	protected char tokenStart = Constants.DEFAULT_TOKEN_START;
 	protected char tokenEnd = Constants.DEFAULT_TOKEN_END;
