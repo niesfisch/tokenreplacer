@@ -24,7 +24,7 @@ import java.util.Map;
  * <br/>
  * NOT PART OF THE PUBLIC API! STILL HERE AND PUBLIC IN CASE YOU NEED TO
  * 'EMERGENCY' SUBCLASS.
- * 
+ *
  * @author msauer
  */
 public class FiniteStateMachineTokenReplacer implements TokenReplacer {
@@ -32,7 +32,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 	/**
 	 * TODO handle end of string properly
 	 */
-	private static final char END_OF_STRING = '\0';
+	private static final char END_OF_STRING = Constants.DEFAULT_END_OF_STRING;
 
 	protected char tokenStart = Constants.DEFAULT_TOKEN_START;
 	protected char tokenEnd = Constants.DEFAULT_TOKEN_END;
@@ -258,7 +258,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String,
 	 * java.lang.String)
@@ -273,7 +273,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seede.marcelsauer.tokenreplacer.TokenReplacer#register(de.marcelsauer.
 	 * tokenreplacer.Token)
 	 */
@@ -287,7 +287,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String,
 	 * de.marcelsauer.tokenreplacer.Generator)
@@ -301,7 +301,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#withTokenStart(java.lang.String
 	 * )
@@ -315,7 +315,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#withTokenEnd(java.lang.String)
 	 */
@@ -335,7 +335,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentDelimiter(java
 	 * .lang.String)
@@ -349,7 +349,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentStart(java.lang
 	 * .String)
@@ -363,7 +363,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#withArgumentEnd(java.lang.
 	 * String)
@@ -377,7 +377,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#doNotIgnoreMissingValues()
 	 */
@@ -389,7 +389,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#ignoreMissingValues()
 	 */
 	@Override
@@ -400,7 +400,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#enableGeneratorCaching()
 	 */
 	@Override
@@ -411,7 +411,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.marcelsauer.tokenreplacer.TokenReplacer#disableGeneratorCaching()
 	 */
 	@Override
@@ -422,7 +422,7 @@ public class FiniteStateMachineTokenReplacer implements TokenReplacer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.marcelsauer.tokenreplacer.TokenReplacer#register(java.lang.String[])
 	 */

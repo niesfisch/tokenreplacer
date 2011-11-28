@@ -20,9 +20,11 @@ package de.marcelsauer.tokenreplacer;
  * @author msauer
  */
 final class Constants {
+
 	static final char DEFAULT_TOKEN_START = '{';
 	static final char DEFAULT_TOKEN_END = '}';
 	static final char DEFAULT_ARGS_SEPARATOR = ',';
 	static final char DEFAULT_ARGS_START = '(';
 	static final char DEFAULT_ARGS_END = ')';
+	static final char DEFAULT_END_OF_STRING = '\0';
 }
