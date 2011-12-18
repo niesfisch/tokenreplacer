@@ -1,0 +1,12 @@
+*note to self*
+
+mvn release:prepare
+mvn release:perform
+
+check if present on sonatype oss repo
+
+mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -Dfile=target/tokenreplacer-1.3.2.jar -DpomFile=pom.xml 
+mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -Dfile=target/tokenreplacer-1.3.2-sources.jar -DpomFile=pom.xml -Dclassifier=sources
+mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -Dfile=target/tokenreplacer-1.3.2-javadoc.jar -DpomFile=pom.xml -Dclassifier=javadoc
+
+check if present on sonatype oss repo
