@@ -1,4 +1,4 @@
-*** Release 1.3.2 (2011-XX-XX)
+*** Release 1.3.2 (2011-12-18)
 Bug Fixes
 ------------------
 - fixed BUG-2 https://github.com/niesfisch/tokenreplacer/issues/4
