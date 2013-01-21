@@ -1,4 +1,4 @@
-https://api.travis-ci.org/niesfisch/tokenreplacer.png [Build Status](http://travis-ci.org/niesfisch/tokenreplacer/builds)
+<img src="https://api.travis-ci.org/niesfisch/tokenreplacer.png"/> [Build Status](http://travis-ci.org/niesfisch/tokenreplacer/builds)
 
 # What's that for? 
 
